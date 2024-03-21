@@ -15,8 +15,8 @@ public class SkillCategoryController {
     private final SkillCategoryService service;
 
     @GetMapping
-    public List<SkillCategory> getAllSkillCategories() {
-        return service.getAllSkillCategories();
+    public ResponseEntity<List<SkillCategory>> getAllSkillCategories() {
+        return ResponseEntity.ok(service.getAllSkillCategories());
     }
 
     @GetMapping("/{id}")
