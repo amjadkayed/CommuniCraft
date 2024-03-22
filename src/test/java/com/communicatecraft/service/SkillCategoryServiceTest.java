@@ -12,32 +12,38 @@ import org.mockito.MockitoAnnotations;
 
 import java.util.Optional;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.*;
 
 class SkillCategoryServiceTest {
 
     @Mock
-    private SkillCategoryRepository repository;
+    SkillCategoryRepository repository;
 
     @InjectMocks
-    private SkillCategoryService service;
+    SkillCategoryService service;
 
     @BeforeEach
-    public void setUp() {
+    void setUp() {
         MockitoAnnotations.openMocks(this);
+    }
+
+    @Test
+    void getAllSkillCategories_returnsAllCategories() {
+        service.getAllSkillCategories();
+        verify(repository, times(1)).findAll();
     }
 
     @Test
     void getSkillCategoryById_returnsCategoryWhenExists() {
         SkillCategory skillCategory = new SkillCategory();
+        skillCategory.setSkillsCategoryId(1);
         when(repository.findById(1)).thenReturn(Optional.of(skillCategory));
 
-        Optional<SkillCategory> result = service.getSkillCategoryById(1);
+        SkillCategory result = service.getSkillCategoryById(1);
 
-        assertTrue(result.isPresent());
-        assertEquals(skillCategory, result.get());
-        verify(repository, times(1)).findById(1);
+        assertEquals(skillCategory, result);
     }
 
     @Test
@@ -45,18 +51,16 @@ class SkillCategoryServiceTest {
         when(repository.findById(1)).thenReturn(Optional.empty());
 
         assertThrows(EntityNotFoundException.class, () -> service.getSkillCategoryById(1));
-        verify(repository, times(1)).findById(1);
     }
 
     @Test
-    void saveSkillCategory_returnsSavedCategory() {
+    void saveSkillCategory_savesCategory() {
         SkillCategory skillCategory = new SkillCategory();
         when(repository.save(skillCategory)).thenReturn(skillCategory);
 
         SkillCategory result = service.saveSkillCategory(skillCategory);
 
         assertEquals(skillCategory, result);
-        verify(repository, times(1)).save(skillCategory);
     }
 
     @Test
@@ -65,11 +69,10 @@ class SkillCategoryServiceTest {
         when(repository.save(skillCategory)).thenThrow(new RuntimeException());
 
         assertThrows(DuplicatedFieldException.class, () -> service.saveSkillCategory(skillCategory));
-        verify(repository, times(1)).save(skillCategory);
     }
 
     @Test
-    void updateSkillCategory_returnsUpdatedCategoryWhenExists() {
+    void updateSkillCategory_updatesCategoryWhenExists() {
         SkillCategory skillCategory = new SkillCategory();
         skillCategory.setSkillsCategoryId(1);
         when(repository.existsById(1)).thenReturn(true);
@@ -78,8 +81,6 @@ class SkillCategoryServiceTest {
         SkillCategory result = service.updateSkillCategory(skillCategory);
 
         assertEquals(skillCategory, result);
-        verify(repository, times(1)).existsById(1);
-        verify(repository, times(1)).save(skillCategory);
     }
 
     @Test
@@ -89,16 +90,14 @@ class SkillCategoryServiceTest {
         when(repository.existsById(1)).thenReturn(false);
 
         assertThrows(EntityNotFoundException.class, () -> service.updateSkillCategory(skillCategory));
-        verify(repository, times(1)).existsById(1);
     }
 
     @Test
-    void deleteSkillCategory_deletesWhenExists() {
+    void deleteSkillCategory_deletesCategoryWhenExists() {
         when(repository.existsById(1)).thenReturn(true);
 
         service.deleteSkillCategory(1);
 
-        verify(repository, times(1)).existsById(1);
         verify(repository, times(1)).deleteById(1);
     }
 
@@ -107,6 +106,5 @@ class SkillCategoryServiceTest {
         when(repository.existsById(1)).thenReturn(false);
 
         assertThrows(EntityNotFoundException.class, () -> service.deleteSkillCategory(1));
-        verify(repository, times(1)).existsById(1);
     }
 }

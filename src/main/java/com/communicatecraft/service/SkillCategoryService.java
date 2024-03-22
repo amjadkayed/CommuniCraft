@@ -8,37 +8,32 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
 public class SkillCategoryService {
 
-    private final SkillCategoryRepository repository;
+    private final SkillCategoryRepository skillCategoryRepository;
     private String notFoundMessage = "SkillCategory not found with id ";
+
     public List<SkillCategory> getAllSkillCategories() {
-        return repository.findAll();
+        return skillCategoryRepository.findAll();
     }
 
-    public Optional<SkillCategory> getSkillCategoryById(Integer id) {
-        Optional<SkillCategory> skillCategory = repository.findById(id);
-        if(skillCategory.isPresent()) {
-            return skillCategory;
-        } else {
-            throw new EntityNotFoundException(notFoundMessage + id);
-        }
+    public SkillCategory getSkillCategoryById(Integer id) {
+        return skillCategoryRepository.findById(id).orElseThrow(() -> new EntityNotFoundException(notFoundMessage + id));
     }
 
     public SkillCategory saveSkillCategory(SkillCategory skillCategory) {
         try {
-            return repository.save(skillCategory);
+            return skillCategoryRepository.save(skillCategory);
         } catch (Exception e) {
             throw new DuplicatedFieldException("Duplicated in skill category name or error in the database");
         }
     }
 
     public SkillCategory updateSkillCategory(SkillCategory skillCategory) {
-        if (repository.existsById(skillCategory.getSkillsCategoryId())) {
+        if (skillCategoryRepository.existsById(skillCategory.getSkillsCategoryId())) {
             return saveSkillCategory(skillCategory);
         } else {
             throw new EntityNotFoundException(notFoundMessage + skillCategory.getSkillsCategoryId());
@@ -46,8 +41,8 @@ public class SkillCategoryService {
     }
 
     public void deleteSkillCategory(Integer id) {
-        if (repository.existsById(id)) {
-            repository.deleteById(id);
+        if (skillCategoryRepository.existsById(id)) {
+            skillCategoryRepository.deleteById(id);
         } else {
             throw new EntityNotFoundException(notFoundMessage + id);
         }

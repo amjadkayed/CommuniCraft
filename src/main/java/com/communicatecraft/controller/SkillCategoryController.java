@@ -13,7 +13,6 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.Collections;
 import java.util.List;
-import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/skillcategories")
@@ -35,8 +34,7 @@ public class SkillCategoryController {
     @GetMapping("/{id}")
     public ResponseEntity<ApiResponse<SkillCategory>> getSkillCategoryById(@PathVariable Integer id) {
         try {
-            Optional<SkillCategory> skillCategory = service.getSkillCategoryById(id);
-            return ResponseEntity.ok(new ApiResponse<>(skillCategory.isPresent() ? skillCategory.get() : null, null));
+            return ResponseEntity.ok(new ApiResponse<>(service.getSkillCategoryById(id), null));
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
                     .body(new ApiResponse<>(null, Collections.singletonList("Error retrieving skill category with id " + id + ": " + e.getMessage())));
