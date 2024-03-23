@@ -14,13 +14,28 @@ import org.springframework.web.bind.annotation.*;
 import java.util.Collections;
 import java.util.List;
 
+/**
+ * Controller class for SkillCategory.
+ * This class provides RESTful endpoints for CRUD operations on SkillCategory objects.
+ * The @RestController annotation is used to indicate that this class is a REST controller.
+ * The @RequestMapping annotation is used to map the endpoints to the /api/skillcategories path.
+ * The @RequiredArgsConstructor annotation is used to automatically generate a constructor with required arguments.
+ */
 @RestController
 @RequestMapping("/api/skillcategories")
 @RequiredArgsConstructor
 public class SkillCategoryController {
 
+    /**
+     * The service that this controller will use to interact with the database.
+     */
     private final SkillCategoryService skillCategoryService;
 
+    /**
+     * Retrieves all SkillCategory objects from the database.
+     *
+     * @return a list of all SkillCategory objects.
+     */
     @GetMapping
     public ResponseEntity<ApiResponse<List<SkillCategory>>> getAllSkillCategories() {
         try {
@@ -31,6 +46,12 @@ public class SkillCategoryController {
         }
     }
 
+    /**
+     * Retrieves a SkillCategory object by its id.
+     *
+     * @param id the id of the SkillCategory object to retrieve.
+     * @return the SkillCategory object with the given id.
+     */
     @GetMapping("/{id}")
     public ResponseEntity<ApiResponse<SkillCategory>> getSkillCategoryById(@PathVariable Integer id) {
         try {
@@ -41,6 +62,12 @@ public class SkillCategoryController {
         }
     }
 
+    /**
+     * Creates a new SkillCategory object in the database.
+     *
+     * @param skillCategory the SkillCategory object to create.
+     * @return the created SkillCategory object.
+     */
     @PostMapping
     public ResponseEntity<ApiResponse<SkillCategory>> createSkillCategory(@Valid @RequestBody SkillCategory skillCategory, BindingResult result) {
         if (result.hasErrors()) {
@@ -56,6 +83,13 @@ public class SkillCategoryController {
         }
     }
 
+    /**
+     * Updates a SkillCategory object in the database.
+     *
+     * @param id            the id of the SkillCategory object to update.
+     * @param skillCategory the SkillCategory object to update.
+     * @return the updated SkillCategory object.
+     */
     @PutMapping("/{id}")
     public ResponseEntity<ApiResponse<SkillCategory>> updateSkillCategory(@PathVariable Integer id, @Valid @RequestBody SkillCategory skillCategory, BindingResult result) {
         if (result.hasErrors()) {
@@ -70,6 +104,12 @@ public class SkillCategoryController {
         }
     }
 
+    /**
+     * Deletes a SkillCategory object from the database.
+     *
+     * @param id the id of the SkillCategory object to delete.
+     * @return a boolean indicating whether the deletion was successful.
+     */
     @DeleteMapping("/{id}")
     public ResponseEntity<ApiResponse<Boolean>> deleteSkillCategory(@PathVariable Integer id) {
         try {
