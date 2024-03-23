@@ -14,7 +14,7 @@ import java.util.List;
 public class SkillCategoryService {
 
     private final SkillCategoryRepository skillCategoryRepository;
-    private String notFoundMessage = "SkillCategory not found with id ";
+    private String notFoundMessage = "Skill category not found with id ";
 
     public List<SkillCategory> getAllSkillCategories() {
         return skillCategoryRepository.findAll();
