@@ -6,7 +6,7 @@ package com.communicatecraft.exceptions;
  * Unchecked exceptions are exceptions that can be thrown during the execution of the program but can be prevented by proper coding.
  */
 public class EntityNotFoundException extends RuntimeException {
-
+//TODO: delete it and use jakarta.EntityNotFoundException
     /**
      * Constructor for the EntityNotFoundException class.
      * This constructor calls the constructor of the superclass (RuntimeException) and passes a message to it.

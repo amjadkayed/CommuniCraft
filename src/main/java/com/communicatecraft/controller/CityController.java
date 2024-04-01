@@ -4,12 +4,15 @@ import com.communicatecraft.helper.Generator;
 import com.communicatecraft.model.City;
 import com.communicatecraft.service.CityService;
 import com.communicatecraft.utils.ResponseMessage;
+import jakarta.persistence.EntityNotFoundException;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/cities")
@@ -23,33 +26,28 @@ public class CityController {
         try {
             return ResponseEntity.ok(cityService.getAllCities());
         } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND)
-                    .body(new ResponseMessage("Error retrieving cities: " + e.getMessage()));
+            return new ResponseEntity<>("Error retrieving cities: " + e.getMessage(), HttpStatus.NOT_FOUND);
         }
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Object> getCityById(@PathVariable Integer id) {
-        try {
-            return ResponseEntity.ok(cityService.getCityById(id));
-        } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND)
-                    .body(new ResponseMessage("Error retrieving city with id " + id + ": " + e.getMessage()));
-        }
+    public ResponseEntity<City> getCityById(@PathVariable Integer id) {
+        return cityService.getCityById(id)
+                .map(ResponseEntity::ok)
+                .orElseGet(() -> ResponseEntity.notFound().build());
     }
 
     @PostMapping
     public ResponseEntity<Object> createCity(@Valid @RequestBody City city, BindingResult result) {
         if (result.hasErrors()) {
             // return errors list
-            return ResponseEntity.badRequest().body(Generator.bindingResultToErrorList(result));
+            return new ResponseEntity<>(Generator.bindingResultToErrorList(result), HttpStatus.BAD_REQUEST);
         }
         try {
-            return ResponseEntity.status(HttpStatus.CREATED)
-                    .body(cityService.saveCity(city));
+            return new ResponseEntity<>(cityService.saveCity(city), HttpStatus.CREATED);
         } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                    .body(new ResponseMessage("Error adding city: " + e.getMessage()));
+            return new ResponseEntity<>(new ResponseMessage("Error adding city: " + e.getMessage()),
+                    HttpStatus.BAD_REQUEST);
         }
     }
 
@@ -61,21 +59,22 @@ public class CityController {
         }
         city.setCityId(id);
         try {
-            return ResponseEntity.ok(cityService.updateCity(city));
+            Optional<City> updatedCity = cityService.updateCity(city);
+            return updatedCity.isPresent() ? new ResponseEntity<>(updatedCity, HttpStatus.OK)
+                    : ResponseEntity.status(HttpStatus.NOT_FOUND).build();
         } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                    .body(new ResponseMessage("Error updating city with id " + id + ": " + e.getMessage()));
+            return new ResponseEntity<>(new ResponseMessage("Error updating city: " + e.getMessage()),
+                    HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<ResponseMessage> deleteCity(@PathVariable Integer id) {
+    public ResponseEntity<Object> deleteCity(@PathVariable Integer id) {
         try {
             cityService.deleteCityById(id);
-            return ResponseEntity.ok(new ResponseMessage("Category with id " + id + "was deleted successfully."));
-        } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND)
-                    .body(new ResponseMessage("Error deleting city with id " + id + ": " + e.getMessage()));
+            return ResponseEntity.ok(new ResponseMessage("Category with id " + id + " was deleted successfully."));
+        } catch (EntityNotFoundException e) {
+            return ResponseEntity.notFound().build();
         }
     }
 }

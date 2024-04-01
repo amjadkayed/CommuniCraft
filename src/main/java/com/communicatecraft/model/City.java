@@ -38,6 +38,6 @@ public class City {
     @NotNull(message = "null city name")
     @NotBlank(message = "blank city name")
     @NotEmpty(message = "empty city name")
-    @Column(nullable = false, length = 128)
+    @Column(nullable = false, length = 128, unique = true)
     private String cityName;
 }
