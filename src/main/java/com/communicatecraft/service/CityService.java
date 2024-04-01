@@ -1,6 +1,5 @@
 package com.communicatecraft.service;
 
-import com.communicatecraft.exceptions.DuplicatedFieldException;
 import com.communicatecraft.model.City;
 import com.communicatecraft.repository.CityRepository;
 import jakarta.persistence.EntityNotFoundException;
@@ -26,11 +25,7 @@ public class CityService {
     }
 
     public Optional<City> saveCity(City city) {
-        try {
-            return Optional.of(cityRepository.save(city));
-        } catch (Exception e) {
-            throw new DuplicatedFieldException("Duplicated in city name");
-        }
+        return Optional.of(cityRepository.save(city));
     }
 
     public Optional<City> updateCity(City city) {
