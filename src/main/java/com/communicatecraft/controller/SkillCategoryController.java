@@ -34,7 +34,8 @@ public class SkillCategoryController {
     /**
      * Retrieves all SkillCategory objects from the database.
      *
-     * @return a list of all SkillCategory objects.
+     * @return a list of all SkillCategory objects as data in an ApiResponse with error message to handle the error in
+     * retrieving requested data.
      */
     @GetMapping
     public ResponseEntity<ApiResponse<List<SkillCategory>>> getAllSkillCategories() {
@@ -50,7 +51,8 @@ public class SkillCategoryController {
      * Retrieves a SkillCategory object by its id.
      *
      * @param id the id of the SkillCategory object to retrieve.
-     * @return the SkillCategory object with the given id.
+     * @return the SkillCategory object with the given id as data in an ApiResponse with error message if the required id is
+     * not exist or if an error occurs while retrieving it.
      */
     @GetMapping("/{id}")
     public ResponseEntity<ApiResponse<SkillCategory>> getSkillCategoryById(@PathVariable Integer id) {
@@ -66,7 +68,8 @@ public class SkillCategoryController {
      * Creates a new SkillCategory object in the database.
      *
      * @param skillCategory the SkillCategory object to create.
-     * @return the created SkillCategory object.
+     * @return the created SkillCategory object as data in an ApiResponse with error message if skillCategory's
+     * information is not valid as defined in the entity, or if saving process threw an error.
      */
     @PostMapping
     public ResponseEntity<ApiResponse<SkillCategory>> createSkillCategory(@Valid @RequestBody SkillCategory skillCategory, BindingResult result) {

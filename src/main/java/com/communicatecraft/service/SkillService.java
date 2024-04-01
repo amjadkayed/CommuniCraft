@@ -27,7 +27,7 @@ public class SkillService {
     /**
      * The message that will be used when a Skill object is not found.
      */
-    private String notFoundMessage = "Skill not found with id ";
+    private static final String NOT_FOUND_MESSAGE = "Skill not found with id ";
 
     /**
      * Retrieves all Skill objects associated with a specific category from the database.
@@ -45,7 +45,7 @@ public class SkillService {
      * @throws EntityNotFoundException if no Skill object with the given id is found.
      */
     public Skill getSkillById(Integer id) {
-        return skillRepository.findById(id).orElseThrow(() -> new EntityNotFoundException(notFoundMessage + id));
+        return skillRepository.findById(id).orElseThrow(() -> new EntityNotFoundException(NOT_FOUND_MESSAGE + id));
     }
 
     /**
@@ -72,7 +72,7 @@ public class SkillService {
         if (skillRepository.existsById(skill.getSkillId())) {
             return saveSkill(skill);
         } else {
-            throw new EntityNotFoundException(notFoundMessage + skill.getSkillId());
+            throw new EntityNotFoundException(NOT_FOUND_MESSAGE + skill.getSkillId());
         }
     }
 
@@ -85,7 +85,7 @@ public class SkillService {
         if (skillRepository.existsById(id)) {
             skillRepository.deleteById(id);
         } else {
-            throw new EntityNotFoundException(notFoundMessage + id);
+            throw new EntityNotFoundException(NOT_FOUND_MESSAGE + id);
         }
     }
 }
