@@ -1,8 +1,8 @@
 package com.communicatecraft.service;
 
-import com.communicatecraft.exceptions.EntityNotFoundException;
 import com.communicatecraft.model.Skill;
 import com.communicatecraft.repository.SkillRepository;
+import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 

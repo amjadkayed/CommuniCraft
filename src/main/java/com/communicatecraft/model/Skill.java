@@ -45,6 +45,7 @@ public class Skill implements Serializable {
     @Column(nullable = false)
     private Integer skillCategoryId;
 
+    //TODO: relation need fixes, when adding a skill to not existed category it adds it without any error
     /**
      * The category that this skill belongs to.
      * It is fetched eagerly, meaning it will be fetched when the Skill object is fetched.

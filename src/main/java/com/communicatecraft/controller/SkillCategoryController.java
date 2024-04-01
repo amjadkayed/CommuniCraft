@@ -11,6 +11,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Optional;
+
 @RestController
 @RequestMapping("/api/skillcategories")
 @RequiredArgsConstructor
@@ -23,33 +25,28 @@ public class SkillCategoryController {
         try {
             return ResponseEntity.ok(skillCategoryService.getAllSkillCategories());
         } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND)
-                    .body(new ResponseMessage("Error retrieving skill categories: " + e.getMessage()));
+            return new ResponseEntity<>("Error retrieving skill categories: " + e.getMessage(), HttpStatus.NOT_FOUND);
         }
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Object> getSkillCategoryById(@PathVariable Integer id) {
-        try {
-            return ResponseEntity.ok(skillCategoryService.getSkillCategoryById(id));
-        } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND)
-                    .body(new ResponseMessage("Error retrieving skill category with id " + id + ": " + e.getMessage()));
-        }
+    public ResponseEntity<SkillCategory> getSkillCategoryById(@PathVariable Integer id) {
+        return skillCategoryService.getSkillCategoryById(id)
+                .map(ResponseEntity::ok)
+                .orElseGet(() -> ResponseEntity.notFound().build());
     }
 
     @PostMapping
     public ResponseEntity<Object> createSkillCategory(@Valid @RequestBody SkillCategory skillCategory, BindingResult result) {
         if (result.hasErrors()) {
             // Handle the validation errors
-            return ResponseEntity.badRequest().body(Generator.bindingResultToErrorList(result));
+            return new ResponseEntity<>(Generator.bindingResultToErrorList(result), HttpStatus.BAD_REQUEST);
         }
         try {
-            return ResponseEntity.status(HttpStatus.CREATED)
-                    .body(skillCategoryService.saveSkillCategory(skillCategory));
+            return new ResponseEntity<>(skillCategoryService.saveSkillCategory(skillCategory), HttpStatus.CREATED);
         } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                    .body(new ResponseMessage("Error adding skill category: " + e.getMessage()));
+            return new ResponseEntity<>(new ResponseMessage("Error adding skill category: " + e.getMessage()),
+                    HttpStatus.BAD_REQUEST);
         }
     }
 
@@ -60,10 +57,12 @@ public class SkillCategoryController {
         }
         skillCategory.setSkillsCategoryId(id);
         try {
-            return ResponseEntity.ok(skillCategoryService.updateSkillCategory(skillCategory));
+            Optional<SkillCategory> updatedSkillCategory = skillCategoryService.updateSkillCategory(skillCategory);
+            return updatedSkillCategory.isPresent() ? new ResponseEntity<>(updatedSkillCategory, HttpStatus.OK)
+                    : ResponseEntity.status(HttpStatus.NOT_FOUND).build();
         } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                    .body(new ResponseMessage("Error updating skill category with id " + id + ": " + e.getMessage()));
+            return new ResponseEntity<>(new ResponseMessage("Error updating skill category: " + e.getMessage()),
+                    HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
@@ -73,8 +72,7 @@ public class SkillCategoryController {
             skillCategoryService.deleteSkillCategory(id);
             return ResponseEntity.ok(new ResponseMessage("Skill category with id " + id + "was deleted successfully."));
         } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND)
-                    .body(new ResponseMessage("Error deleting skill category with id " + id + ": " + e.getMessage()));
+            return ResponseEntity.notFound().build();
         }
     }
 }

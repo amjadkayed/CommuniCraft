@@ -22,7 +22,7 @@ public class SkillController {
     private final SkillService skillService;
 
     @GetMapping
-    public ResponseEntity<Object> getAllSkills(@PathVariable Integer skillcategoryid) {
+    public ResponseEntity<Object> getAllSkillsByCategoryId(@PathVariable Integer skillcategoryid) {
         try {
             return ResponseEntity.ok(skillService.getAllSkillsByCategoryId(skillcategoryid));
         } catch (Exception e) {
