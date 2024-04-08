@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/locations")
@@ -25,10 +26,17 @@ public class LocationController {
 
     @PostMapping
     public ResponseEntity<Object> createLocation(@Valid @RequestBody Location location, BindingResult result) {
-        if(result.hasErrors()){
+        if (result.hasErrors()) {
             Map<String, Object> errorResponse = new HashMap<>();
             errorResponse.put("errors", Converter.convertBindingResultToErrorList(result));
-            return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);        }
+            return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
+        }
+        // check if the location is already exists
+        Optional<Location> checkResult = locationService.checkIfLocationExists(location.getCityName(), location.getStateName(), location.getCountryName());
+        if(checkResult.isPresent()){
+            return ResponseEntity.status(HttpStatus.CREATED)
+                    .body(checkResult);
+        }
         return ResponseEntity.status(HttpStatus.CREATED)
                 .body(locationService.saveLocation(location));
     }
