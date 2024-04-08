@@ -47,7 +47,7 @@ public class CityController {
             return new ResponseEntity<>(cityService.saveCity(city), HttpStatus.CREATED);
         } catch (Exception e) {
             return new ResponseEntity<>(new ResponseMessage("Error adding city: " + e.getMessage()),
-                    HttpStatus.BAD_REQUEST);
+                    HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
