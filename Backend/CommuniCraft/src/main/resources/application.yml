@@ -1,0 +1,23 @@
+server:
+  port: 1218
+  error:
+    include-message: always
+    include-binding-errors: always
+
+spring:
+  mvc:
+    view:
+      prefix: /WEB-INF/jsp/
+      suffix: .jsp
+  datasource:
+    password: admin123
+    url: jdbc:mysql://communicraft-db.c9ywgmcqqo8p.us-east-2.rds.amazonaws.com:3306/CommuniCraft
+    username: admin
+  jpa:
+    hibernate:
+      ddl-auto: create-drop
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.MySQLDialect
+        format_sql: true
+    show-sql: true
