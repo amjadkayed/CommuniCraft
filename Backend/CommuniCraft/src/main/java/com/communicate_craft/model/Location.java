@@ -1,6 +1,7 @@
 package com.communicate_craft.model;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotNull;
 import lombok.Data;
 
 @Data
@@ -11,11 +12,11 @@ public class Location {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer locationID;
 
-    @Column(nullable = false)
+    @NotNull(message = "null city name")
     private String cityName;
 
     private String stateName;
 
-    @Column(nullable = false)
+    @NotNull(message = "null country name")
     private String countryName;
 }
