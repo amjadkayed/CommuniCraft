@@ -13,8 +13,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.util.HashMap;
-import java.util.Map;
 import java.util.Optional;
 
 @RestController
@@ -27,13 +25,11 @@ public class LocationController {
     @PostMapping
     public ResponseEntity<Object> createLocation(@Valid @RequestBody Location location, BindingResult result) {
         if (result.hasErrors()) {
-            Map<String, Object> errorResponse = new HashMap<>();
-            errorResponse.put("errors", Converter.convertBindingResultToErrorList(result));
-            return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>(Converter.convertBindingResultToErrorResponse(result), HttpStatus.BAD_REQUEST);
         }
         // check if the location is already exists
         Optional<Location> checkResult = locationService.checkIfLocationExists(location.getCityName(), location.getStateName(), location.getCountryName());
-        if(checkResult.isPresent()){
+        if (checkResult.isPresent()) {
             return ResponseEntity.status(HttpStatus.CREATED)
                     .body(checkResult);
         }

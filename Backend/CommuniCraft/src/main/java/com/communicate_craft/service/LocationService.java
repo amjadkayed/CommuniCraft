@@ -16,7 +16,12 @@ public class LocationService {
         return locationRepository.save(location);
     }
 
+    public Optional<Location> findById(Integer locationId) {
+        return locationRepository.findById(locationId);
+    }
+
     public Optional<Location> checkIfLocationExists(String cityName, String stateName, String countryName) {
         Location existingLocation = locationRepository.findByCityNameAndStateNameAndCountryName(cityName, stateName, countryName);
-        return Optional.ofNullable(existingLocation);    }
+        return Optional.ofNullable(existingLocation);
+    }
 }
