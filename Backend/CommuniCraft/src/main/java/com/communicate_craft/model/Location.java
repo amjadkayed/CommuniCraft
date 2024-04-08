@@ -15,8 +15,8 @@ public class Location {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "LocationID")
-    private Integer locationID;
+    @Column(name = "LocationId")
+    private Integer locationId;
 
     @NotEmpty(message = "empty city name")
     @Column(name = "CityName")

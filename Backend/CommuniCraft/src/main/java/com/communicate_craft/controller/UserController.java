@@ -11,6 +11,7 @@ import com.communicate_craft.utils.Converter;
 import com.communicate_craft.utils.ErrorsResponse;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.java.Log;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
@@ -18,6 +19,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.Optional;
 
+@Log
 @RestController
 @RequestMapping("/api/users")
 @RequiredArgsConstructor
