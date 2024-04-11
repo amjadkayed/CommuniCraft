@@ -29,7 +29,7 @@ public class Converter {
         user.setFirstName(registrationDTO.getFirstName());
         user.setLastName(registrationDTO.getLastName());
         user.setEmail(registrationDTO.getEmail());
-        user.setPasswordHash(registrationDTO.getPasswordHash());
+        user.setPassword(registrationDTO.getPassword());
         user.setPhoneNumber(registrationDTO.getPhoneNumber());
         user.setLocation(location);
         return user;
@@ -40,7 +40,7 @@ public class Converter {
         oldUser.setFirstName(newUser.getFirstName());
         oldUser.setLastName(newUser.getLastName());
         oldUser.setEmail(newUser.getEmail());
-        oldUser.setPasswordHash(newUser.getPasswordHash());
+        oldUser.setPassword(newUser.getPassword());
         oldUser.setPhoneNumber(newUser.getPhoneNumber());
         oldUser.setUserImageURL(newUser.getUserImageURL());
         oldUser.setLastOnlineTime(LocalDateTime.now());

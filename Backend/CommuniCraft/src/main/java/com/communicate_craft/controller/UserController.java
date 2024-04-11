@@ -1,7 +1,7 @@
 package com.communicate_craft.controller;
 
 import com.communicate_craft.dto.UserRegistrationDTO;
-import com.communicate_craft.enums.UserType;
+import com.communicate_craft.enums.Role;
 import com.communicate_craft.exceprions.DuplicateEntryException;
 import com.communicate_craft.model.Location;
 import com.communicate_craft.model.User;
@@ -47,7 +47,7 @@ public class UserController {
         if (location.isEmpty())
             return new ResponseEntity<>(new ErrorsResponse("Location not found with id: " + registrationDTO.getLocationId()), HttpStatus.BAD_REQUEST);
         User user = Converter.convertUserDtoToUser(registrationDTO, location.get());
-        user.setUserType(UserType.CLIENT);
+        user.setRole(Role.CLIENT);
         try {
             return ResponseEntity.status(HttpStatus.CREATED)
                     .body(userService.saveUser(user));

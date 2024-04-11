@@ -13,7 +13,6 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class UserService {
     private final UserRepository userRepository;
-
     public User saveUser(User user) throws DuplicateEntryException {
         if (userRepository.findByEmail(user.getEmail()).isPresent()) {
             throw new DuplicateEntryException("Email already exists: " + user.getEmail());
