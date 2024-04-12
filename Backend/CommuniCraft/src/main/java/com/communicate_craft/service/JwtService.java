@@ -5,6 +5,7 @@ import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
+import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
@@ -49,6 +50,9 @@ public class JwtService {
         return extractClaim(token, Claims::getSubject);
     }
 
+    public Date extractExpiration(String token){
+        return extractClaim(token, Claims::getExpiration);
+    }
     //---------------------------- generate token
 
     public String generateToken(UserDetails userDetails){
@@ -64,5 +68,12 @@ public class JwtService {
                 .compact();
     }
 
-
+    //---------------------------- check token's validation
+    public boolean isTokenExpired(String token){
+        return extractExpiration(token).before(new Date());
+    }
+    public boolean isTokenValid(String token, UserDetails userDetails){
+        String username = extractUsername(token);
+        return (username.equals(userDetails.getUsername())) && !isTokenExpired(token);
+    }
 }
