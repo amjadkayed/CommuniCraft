@@ -1,6 +1,6 @@
-package com.communicate_craft.filter;
+package com.communicate_craft.security.filter;
 
-import com.communicate_craft.service.JwtService;
+import com.communicate_craft.authentication.JwtService;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;

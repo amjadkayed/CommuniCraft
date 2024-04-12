@@ -1,13 +1,12 @@
-package com.communicate_craft.service;
+package com.communicate_craft.authentication;
 
-import com.communicate_craft.dto.AuthenticationRequest;
-import com.communicate_craft.dto.AuthenticationResponse;
-import com.communicate_craft.dto.RegisterRequest;
+import com.communicate_craft.location.LocationService;
+import com.communicate_craft.user.dto.RegisterRequest;
 import com.communicate_craft.enums.Role;
 import com.communicate_craft.exceprions.DuplicateEntryException;
-import com.communicate_craft.model.Location;
-import com.communicate_craft.model.User;
-import com.communicate_craft.repository.UserRepository;
+import com.communicate_craft.location.Location;
+import com.communicate_craft.user.User;
+import com.communicate_craft.user.UserRepository;
 import com.communicate_craft.utils.Converter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.AuthenticationManager;

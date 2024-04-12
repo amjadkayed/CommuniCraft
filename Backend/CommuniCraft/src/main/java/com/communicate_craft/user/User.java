@@ -1,6 +1,7 @@
-package com.communicate_craft.model;
+package com.communicate_craft.user;
 
 import com.communicate_craft.enums.Role;
+import com.communicate_craft.location.Location;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;

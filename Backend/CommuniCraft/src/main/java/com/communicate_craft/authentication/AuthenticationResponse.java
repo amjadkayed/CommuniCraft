@@ -1,4 +1,4 @@
-package com.communicate_craft.dto;
+package com.communicate_craft.authentication;
 
 import lombok.Builder;
 

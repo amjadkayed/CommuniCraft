@@ -1,6 +1,6 @@
-package com.communicate_craft.dto;
+package com.communicate_craft.user.dto;
 
-import com.communicate_craft.model.User;
+import com.communicate_craft.user.User;
 
 public class UserUpdateDTO extends User {
     // only the following attributes are allowed to be updated

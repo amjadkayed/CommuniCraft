@@ -1,12 +1,10 @@
-package com.communicate_craft.controller;
+package com.communicate_craft.user;
 
-import com.communicate_craft.dto.RegisterRequest;
+import com.communicate_craft.user.dto.RegisterRequest;
 import com.communicate_craft.enums.Role;
 import com.communicate_craft.exceprions.DuplicateEntryException;
-import com.communicate_craft.model.Location;
-import com.communicate_craft.model.User;
-import com.communicate_craft.service.LocationService;
-import com.communicate_craft.service.UserService;
+import com.communicate_craft.location.Location;
+import com.communicate_craft.location.LocationService;
 import com.communicate_craft.utils.Converter;
 import com.communicate_craft.utils.ErrorsResponse;
 import jakarta.validation.Valid;

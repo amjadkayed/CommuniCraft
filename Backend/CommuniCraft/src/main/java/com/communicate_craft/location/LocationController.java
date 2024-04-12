@@ -1,7 +1,5 @@
-package com.communicate_craft.controller;
+package com.communicate_craft.location;
 
-import com.communicate_craft.model.Location;
-import com.communicate_craft.service.LocationService;
 import com.communicate_craft.utils.Converter;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;

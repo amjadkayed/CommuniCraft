@@ -1,7 +1,7 @@
-package com.communicate_craft.service;
+package com.communicate_craft.location;
 
-import com.communicate_craft.model.Location;
-import com.communicate_craft.repository.LocationRepository;
+import com.communicate_craft.location.Location;
+import com.communicate_craft.location.LocationRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 

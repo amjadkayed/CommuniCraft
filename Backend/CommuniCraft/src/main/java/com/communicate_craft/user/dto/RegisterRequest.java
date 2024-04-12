@@ -1,6 +1,6 @@
-package com.communicate_craft.dto;
+package com.communicate_craft.user.dto;
 
-import com.communicate_craft.model.User;
+import com.communicate_craft.user.User;
 import jakarta.validation.constraints.NotNull;
 import lombok.Data;
 

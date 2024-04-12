@@ -1,6 +1,5 @@
-package com.communicate_craft.repository;
+package com.communicate_craft.user;
 
-import com.communicate_craft.model.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.Optional;

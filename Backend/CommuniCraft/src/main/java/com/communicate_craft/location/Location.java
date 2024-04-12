@@ -1,5 +1,6 @@
-package com.communicate_craft.model;
+package com.communicate_craft.location;
 
+import com.communicate_craft.user.User;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotEmpty;

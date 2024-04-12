@@ -1,8 +1,6 @@
-package com.communicate_craft.service;
+package com.communicate_craft.user;
 
 import com.communicate_craft.exceprions.DuplicateEntryException;
-import com.communicate_craft.model.User;
-import com.communicate_craft.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 

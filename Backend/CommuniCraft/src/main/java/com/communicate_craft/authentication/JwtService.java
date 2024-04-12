@@ -1,4 +1,4 @@
-package com.communicate_craft.service;
+package com.communicate_craft.authentication;
 
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;

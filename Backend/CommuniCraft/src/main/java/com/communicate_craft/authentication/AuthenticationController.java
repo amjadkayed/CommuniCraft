@@ -1,9 +1,6 @@
-package com.communicate_craft.controller;
+package com.communicate_craft.authentication;
 
-import com.communicate_craft.dto.AuthenticationRequest;
-import com.communicate_craft.dto.AuthenticationResponse;
-import com.communicate_craft.dto.RegisterRequest;
-import com.communicate_craft.service.AuthenticationService;
+import com.communicate_craft.user.dto.RegisterRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
