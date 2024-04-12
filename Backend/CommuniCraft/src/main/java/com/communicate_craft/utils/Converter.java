@@ -1,6 +1,6 @@
 package com.communicate_craft.utils;
 
-import com.communicate_craft.dto.UserRegistrationDTO;
+import com.communicate_craft.dto.RegisterRequest;
 import com.communicate_craft.model.Location;
 import com.communicate_craft.model.User;
 import org.springframework.validation.BindingResult;
@@ -23,7 +23,7 @@ public class Converter {
         return errors;
     }
 
-    public static User convertUserDtoToUser(UserRegistrationDTO registrationDTO, Location location) {
+    public static User convertUserDtoToUser(RegisterRequest registrationDTO, Location location) {
         User user = new User();
         user.setUsername(registrationDTO.getUsername());
         user.setFirstName(registrationDTO.getFirstName());
@@ -35,7 +35,7 @@ public class Converter {
         return user;
     }
 
-    public static User convertUserUpdateDtoToUser(UserRegistrationDTO newUser, User oldUser, Location location) {
+    public static User convertUserUpdateDtoToUser(RegisterRequest newUser, User oldUser, Location location) {
         oldUser.setUsername(newUser.getUsername());
         oldUser.setFirstName(newUser.getFirstName());
         oldUser.setLastName(newUser.getLastName());

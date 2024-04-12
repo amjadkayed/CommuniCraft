@@ -1,6 +1,6 @@
 package com.communicate_craft.controller;
 
-import com.communicate_craft.dto.UserRegistrationDTO;
+import com.communicate_craft.dto.RegisterRequest;
 import com.communicate_craft.enums.Role;
 import com.communicate_craft.exceprions.DuplicateEntryException;
 import com.communicate_craft.model.Location;
@@ -21,7 +21,7 @@ import java.util.Optional;
 
 @Log
 @RestController
-@RequestMapping("/api/users")
+@RequestMapping("/api/public/users")
 @RequiredArgsConstructor
 public class UserController {
 
@@ -39,14 +39,14 @@ public class UserController {
     }
 
     @PostMapping("/register")
-    public ResponseEntity<Object> createUser(@Valid @RequestBody UserRegistrationDTO registrationDTO, BindingResult result) {
+    public ResponseEntity<Object> createUser(@Valid @RequestBody RegisterRequest request, BindingResult result) {
         if (result.hasErrors()) {
             return new ResponseEntity<>(Converter.convertBindingResultToErrorResponse(result), HttpStatus.BAD_REQUEST);
         }
-        Optional<Location> location = locationService.findById(registrationDTO.getLocationId());
+        Optional<Location> location = locationService.findById(request.getLocationId());
         if (location.isEmpty())
-            return new ResponseEntity<>(new ErrorsResponse("Location not found with id: " + registrationDTO.getLocationId()), HttpStatus.BAD_REQUEST);
-        User user = Converter.convertUserDtoToUser(registrationDTO, location.get());
+            return new ResponseEntity<>(new ErrorsResponse("Location not found with id: " + request.getLocationId()), HttpStatus.BAD_REQUEST);
+        User user = Converter.convertUserDtoToUser(request, location.get());
         user.setRole(Role.CLIENT);
         try {
             return ResponseEntity.status(HttpStatus.CREATED)
@@ -57,7 +57,7 @@ public class UserController {
     }
 
     @PutMapping("/{userId}")
-    public ResponseEntity<Object> updateUser(@PathVariable Integer userId, @Valid @RequestBody UserRegistrationDTO updateUserDTO, BindingResult result) {
+    public ResponseEntity<Object> updateUser(@PathVariable Integer userId, @Valid @RequestBody RegisterRequest updateUserDTO, BindingResult result) {
         if (result.hasErrors()) {
             return new ResponseEntity<>(Converter.convertBindingResultToErrorResponse(result), HttpStatus.BAD_REQUEST);
         }

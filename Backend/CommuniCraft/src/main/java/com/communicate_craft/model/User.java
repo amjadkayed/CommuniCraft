@@ -47,7 +47,7 @@ public class User implements UserDetails {
     private String email;
 
     @NotEmpty(message = "empty password")
-    @Column(name = "PasswordHash")
+    @Column(name = "Password")
     private String password;
 
     @NotEmpty(message = "empty phone number")

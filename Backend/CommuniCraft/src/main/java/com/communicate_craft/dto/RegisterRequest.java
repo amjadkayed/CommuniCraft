@@ -6,7 +6,7 @@ import lombok.Data;
 
 
 @Data
-public class UserRegistrationDTO extends User {
+public class RegisterRequest extends User {
     @NotNull(message = "Location ID cannot be null")
     private Integer locationId;
 

@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.Optional;
 
 @RestController
-@RequestMapping("/api/locations")
+@RequestMapping("/api/public/locations")
 @RequiredArgsConstructor
 public class LocationController {
 
