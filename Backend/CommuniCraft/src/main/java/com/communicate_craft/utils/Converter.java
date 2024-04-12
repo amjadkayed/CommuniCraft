@@ -1,6 +1,6 @@
 package com.communicate_craft.utils;
 
-import com.communicate_craft.user.dto.RegisterRequest;
+import com.communicate_craft.authentication.RegisterRequest;
 import com.communicate_craft.location.Location;
 import com.communicate_craft.user.User;
 import org.springframework.validation.BindingResult;

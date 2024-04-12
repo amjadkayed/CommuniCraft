@@ -1,13 +1,13 @@
 package com.communicate_craft.authentication;
 
-import com.communicate_craft.location.LocationService;
-import com.communicate_craft.user.dto.RegisterRequest;
 import com.communicate_craft.enums.Role;
 import com.communicate_craft.exceprions.DuplicateEntryException;
 import com.communicate_craft.location.Location;
+import com.communicate_craft.location.LocationService;
 import com.communicate_craft.user.User;
 import com.communicate_craft.user.UserRepository;
 import com.communicate_craft.utils.Converter;
+import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -24,10 +24,14 @@ public class AuthenticationService {
     private final LocationService locationService;
     private final AuthenticationManager authenticationManager;
     private final PasswordEncoder passwordEncoder;
+
     public AuthenticationResponse register(RegisterRequest request) {
         Optional<Location> location = locationService.findById(request.getLocationId());
-        request.setPassword(passwordEncoder.encode(request.getPassword()));
+        if (location.isEmpty())
+            throw new EntityNotFoundException("Location not found with id: " + request.getLocationId());
+
         User user = Converter.convertUserDtoToUser(request, location.get());
+        user.setPassword(passwordEncoder.encode(user.getPassword()));
         user.setRole(Role.CLIENT);
         if (userRepository.findByEmail(user.getEmail()).isPresent()) {
             throw new DuplicateEntryException("Email already exists: " + user.getEmail());
@@ -38,8 +42,7 @@ public class AuthenticationService {
         if (userRepository.findByPhoneNumber(user.getPhoneNumber()).isPresent()) {
             throw new DuplicateEntryException("Phone number already exists: " + user.getPhoneNumber());
         }
-        user = userRepository.save(user);
-        var jwtToken = jwtService.generateToken(user);
+        var jwtToken = jwtService.generateToken(userRepository.save(user));
         return AuthenticationResponse
                 .builder()
                 .token(jwtToken)

@@ -1,6 +1,6 @@
 package com.communicate_craft.user;
 
-import com.communicate_craft.user.dto.RegisterRequest;
+import com.communicate_craft.authentication.RegisterRequest;
 import com.communicate_craft.enums.Role;
 import com.communicate_craft.exceprions.DuplicateEntryException;
 import com.communicate_craft.location.Location;
@@ -33,24 +33,6 @@ public class UserController {
             return ResponseEntity.ok(user);
         } else {
             return ResponseEntity.notFound().build();
-        }
-    }
-
-    @PostMapping("/register")
-    public ResponseEntity<Object> createUser(@Valid @RequestBody RegisterRequest request, BindingResult result) {
-        if (result.hasErrors()) {
-            return new ResponseEntity<>(Converter.convertBindingResultToErrorResponse(result), HttpStatus.BAD_REQUEST);
-        }
-        Optional<Location> location = locationService.findById(request.getLocationId());
-        if (location.isEmpty())
-            return new ResponseEntity<>(new ErrorsResponse("Location not found with id: " + request.getLocationId()), HttpStatus.BAD_REQUEST);
-        User user = Converter.convertUserDtoToUser(request, location.get());
-        user.setRole(Role.CLIENT);
-        try {
-            return ResponseEntity.status(HttpStatus.CREATED)
-                    .body(userService.saveUser(user));
-        } catch (DuplicateEntryException e) {
-            return new ResponseEntity<>(new ErrorsResponse(e.getMessage()), HttpStatus.BAD_REQUEST);
         }
     }
 
