@@ -20,7 +20,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     /*
         1- check if we have JWT token
         2- extract username from header
-        2- call UserDetailsService to check if we have the user within our DB or not
+        - call UserDetailsService to check if we have the user within our DB or not
      */
     @Override
     protected void doFilterInternal(@NonNull HttpServletRequest request,
