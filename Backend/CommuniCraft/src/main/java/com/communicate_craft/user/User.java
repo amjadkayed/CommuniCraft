@@ -3,12 +3,12 @@ package com.communicate_craft.user;
 import com.communicate_craft.enums.Role;
 import com.communicate_craft.location.Location;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.*;
-import jakarta.validation.constraints.Email;
-import jakarta.validation.constraints.NotEmpty;
-import jakarta.validation.constraints.Pattern;
-import jakarta.validation.constraints.Size;
-import lombok.Data;
+import jakarta.validation.constraints.*;
+import lombok.Getter;
+import lombok.Setter;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -18,7 +18,8 @@ import java.time.LocalDateTime;
 import java.util.Collection;
 import java.util.List;
 
-@Data
+@Getter
+@Setter
 @Entity
 @Table(name = "Users")
 public class User implements UserDetails {
@@ -45,6 +46,7 @@ public class User implements UserDetails {
     @NotEmpty(message = "empty email")
     @Email
     @Column(name = "Email")
+    @JsonIgnoreProperties
     private String email;
 
     @NotEmpty(message = "empty password")
@@ -57,6 +59,7 @@ public class User implements UserDetails {
     @Column(name = "PhoneNumber", nullable = false)
     private String phoneNumber;
 
+    @NotNull
     @Enumerated(EnumType.STRING)
     @Column(name = "Role")
     private Role role;
@@ -98,11 +101,6 @@ public class User implements UserDetails {
     }
 
     @Override
-    public String getPassword() {
-        return password;
-    }
-
-    @Override
     public String getUsername() {
         return username;
     }
@@ -125,5 +123,25 @@ public class User implements UserDetails {
     @Override
     public boolean isEnabled() {
         return true;
+    }
+
+    //----------------- to make password, email deserializable but not serializable
+
+    @Override
+    @JsonIgnore
+    public String getPassword() {
+        return password;
+    }
+    @JsonProperty
+    public void setPassword(String password) {
+        this.password = password;
+    }
+    @JsonIgnore
+    public String getEmail() {
+        return email;
+    }
+    @JsonProperty
+    public void setEmail(String email) {
+        this.email = email;
     }
 }

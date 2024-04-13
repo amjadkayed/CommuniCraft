@@ -1,4 +1,4 @@
-package com.communicate_craft.authentication;
+package com.communicate_craft.authentication.dto;
 
 import com.communicate_craft.user.User;
 import jakarta.validation.constraints.NotNull;

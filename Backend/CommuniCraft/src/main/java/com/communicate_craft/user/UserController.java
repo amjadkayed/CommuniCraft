@@ -1,7 +1,6 @@
 package com.communicate_craft.user;
 
-import com.communicate_craft.authentication.RegisterRequest;
-import com.communicate_craft.enums.Role;
+import com.communicate_craft.authentication.dto.RegisterRequest;
 import com.communicate_craft.exceprions.DuplicateEntryException;
 import com.communicate_craft.location.Location;
 import com.communicate_craft.location.LocationService;

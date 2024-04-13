@@ -1,6 +1,6 @@
 package com.communicate_craft.utils;
 
-import com.communicate_craft.authentication.RegisterRequest;
+import com.communicate_craft.authentication.dto.RegisterRequest;
 import com.communicate_craft.location.Location;
 import com.communicate_craft.user.User;
 import org.springframework.validation.BindingResult;
@@ -32,6 +32,7 @@ public class Converter {
         user.setPassword(registrationDTO.getPassword());
         user.setPhoneNumber(registrationDTO.getPhoneNumber());
         user.setLocation(location);
+        user.setRole(registrationDTO.getRole());
         return user;
     }
 
