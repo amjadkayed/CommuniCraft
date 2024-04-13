@@ -28,16 +28,18 @@ public class AuthenticationController {
 
     @PostMapping("/register")
     public ResponseEntity<Object> register(@Valid @RequestBody RegisterRequest request, BindingResult result) {
+        log.info("AuthenticationController --> register --> registering a user with username: " + request.getUsername());
         if (result.hasErrors()) {
             return new ResponseEntity<>(Converter.convertBindingResultToErrorResponse(result), HttpStatus.BAD_REQUEST);
         }
-        log.info("Registering a user with username: " + request.getUsername());
         try {
             return new ResponseEntity<>(authenticationService.register(request), HttpStatus.CREATED);
         } catch (EntityNotFoundException e) {
+            log.error("AuthenticationController --> register --> location is not found");
             return new ResponseEntity<>(new ErrorsResponse("Location with id " + request.getLocationId() + " is not found")
                     , HttpStatus.NOT_FOUND);
         } catch (DuplicateEntryException e) {
+            log.error("AuthenticationController --> register --> " + e.getMessage());
             return new ResponseEntity<>(new ErrorsResponse(e.getMessage()), HttpStatus.BAD_REQUEST);
         }
     }
