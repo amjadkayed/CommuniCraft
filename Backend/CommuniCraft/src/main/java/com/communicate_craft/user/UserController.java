@@ -3,7 +3,7 @@ package com.communicate_craft.user;
 import com.communicate_craft.authentication.dto.RegisterRequest;
 import com.communicate_craft.exceprions.DuplicateEntryException;
 import com.communicate_craft.location.Location;
-import com.communicate_craft.location.LocationService;
+import com.communicate_craft.location.LocationServiceImpl;
 import com.communicate_craft.utils.Converter;
 import com.communicate_craft.utils.ErrorsResponse;
 import jakarta.validation.Valid;
@@ -23,7 +23,7 @@ import java.util.Optional;
 public class UserController {
 
     private final UserService userService;
-    private final LocationService locationService;
+    private final LocationServiceImpl locationServiceImpl;
 
     @GetMapping("/{userId}")
     public ResponseEntity<Object> getUserById(@PathVariable Integer userId) {
@@ -40,7 +40,7 @@ public class UserController {
         if (result.hasErrors()) {
             return new ResponseEntity<>(Converter.convertBindingResultToErrorResponse(result), HttpStatus.BAD_REQUEST);
         }
-        Optional<Location> location = locationService.findById(updateUserDTO.getLocationId());
+        Optional<Location> location = locationServiceImpl.findById(updateUserDTO.getLocationId());
         if (location.isEmpty())
             return new ResponseEntity<>(new ErrorsResponse("Location not found with id: " + updateUserDTO.getLocationId()), HttpStatus.BAD_REQUEST);
 

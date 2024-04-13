@@ -20,7 +20,7 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class LocationController {
 
-    private final LocationService locationService;
+    private final LocationServiceImpl locationServiceImpl;
 
     @PostMapping
     public ResponseEntity<Object> createLocation(@Valid @RequestBody Location location, BindingResult result) {
@@ -29,13 +29,13 @@ public class LocationController {
             return new ResponseEntity<>(Converter.convertBindingResultToErrorResponse(result), HttpStatus.BAD_REQUEST);
         }
         // check if the location is already exists
-        Optional<Location> checkResult = locationService.checkIfLocationExists(location.getCityName(), location.getStateName(), location.getCountryName());
+        Optional<Location> checkResult = locationServiceImpl.checkIfLocationExists(location.getCityName(), location.getStateName(), location.getCountryName());
         if (checkResult.isPresent()) {
             log.info("LocationController --> createLocation --> location is already exists");
             return ResponseEntity.ok(checkResult);
         }
         return ResponseEntity.status(HttpStatus.CREATED)
-                .body(locationService.saveLocation(location));
+                .body(locationServiceImpl.saveLocation(location));
     }
 
 }

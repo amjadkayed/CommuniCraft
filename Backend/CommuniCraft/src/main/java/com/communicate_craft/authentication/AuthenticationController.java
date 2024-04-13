@@ -24,7 +24,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/api/auth")
 public class AuthenticationController {
 
-    private final AuthenticationService authenticationService;
+    private final AuthenticationServiceImpl authenticationServiceImpl;
 
     @PostMapping("/register")
     public ResponseEntity<Object> register(@Valid @RequestBody RegisterRequest request, BindingResult result) {
@@ -33,7 +33,7 @@ public class AuthenticationController {
             return new ResponseEntity<>(Converter.convertBindingResultToErrorResponse(result), HttpStatus.BAD_REQUEST);
         }
         try {
-            return new ResponseEntity<>(authenticationService.register(request), HttpStatus.CREATED);
+            return new ResponseEntity<>(authenticationServiceImpl.register(request), HttpStatus.CREATED);
         } catch (EntityNotFoundException e) {
             log.error("AuthenticationController --> register --> location is not found");
             return new ResponseEntity<>(new ErrorsResponse("Location with id " + request.getLocationId() + " is not found")
@@ -48,7 +48,7 @@ public class AuthenticationController {
     public ResponseEntity<Object> login(@RequestBody AuthenticationRequest request) {
         log.info("AuthenticationController --> login --> logging a user with email: " + request.email());
         try {
-            return ResponseEntity.ok(authenticationService.authenticate(request));
+            return ResponseEntity.ok(authenticationServiceImpl.authenticate(request));
         } catch (AuthenticationException e) {
             log.error("AuthenticationController --> login --> Invalid email or password");
             return new ResponseEntity<>(new ErrorsResponse("Invalid email or password"), HttpStatus.BAD_REQUEST);
