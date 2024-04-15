@@ -1,6 +1,7 @@
 package com.communicate_craft.authentication;
 
 import com.communicate_craft.authentication.dto.AuthenticationRequest;
+import com.communicate_craft.authentication.dto.AuthenticationResponse;
 import com.communicate_craft.authentication.dto.RegisterRequest;
 import com.communicate_craft.exceprions.DuplicateEntryException;
 import com.communicate_craft.utils.Converter;
@@ -33,7 +34,10 @@ public class AuthenticationController {
             return new ResponseEntity<>(Converter.convertBindingResultToErrorResponse(result), HttpStatus.BAD_REQUEST);
         }
         try {
-            return new ResponseEntity<>(authenticationServiceImpl.register(request), HttpStatus.CREATED);
+            AuthenticationResponse response = authenticationServiceImpl.register(request);
+            return ResponseEntity.status(HttpStatus.CREATED)
+                    .header("Authorization", "Bearer " + response.token())
+                    .body(response.user());
         } catch (EntityNotFoundException e) {
             log.error("AuthenticationController --> register --> location is not found");
             return new ResponseEntity<>(new ErrorsResponse("Location with id " + request.getLocationId() + " is not found")
@@ -48,7 +52,10 @@ public class AuthenticationController {
     public ResponseEntity<Object> login(@RequestBody AuthenticationRequest request) {
         log.info("AuthenticationController --> login --> logging a user with email: " + request.email());
         try {
-            return ResponseEntity.ok(authenticationServiceImpl.authenticate(request));
+            AuthenticationResponse response = authenticationServiceImpl.authenticate(request);
+            return ResponseEntity.ok()
+                    .header("Authorization", "Bearer " + response.token())
+                    .body(response.user());
         } catch (AuthenticationException e) {
             log.error("AuthenticationController --> login --> Invalid email or password");
             return new ResponseEntity<>(new ErrorsResponse("Invalid email or password"), HttpStatus.BAD_REQUEST);

@@ -11,6 +11,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.java.Log;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
@@ -18,13 +19,14 @@ import java.util.Optional;
 
 @Log
 @RestController
-@RequestMapping("/api/public/users")
+@RequestMapping("/api/admin/users")
 @RequiredArgsConstructor
 public class UserController {
 
     private final UserService userService;
     private final LocationServiceImpl locationServiceImpl;
 
+//    @PreAuthorize("hasAuthority('ADMIN')")
     @GetMapping("/{userId}")
     public ResponseEntity<Object> getUserById(@PathVariable Integer userId) {
         Optional<User> user = userService.findByUserId(userId);

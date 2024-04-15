@@ -1,15 +1,16 @@
 package com.communicate_craft.security.filter;
 
 import com.communicate_craft.authentication.JwtService;
+import com.communicate_craft.user.User;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.lang.NonNull;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
 import org.springframework.stereotype.Component;
@@ -17,6 +18,7 @@ import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
 
+@Slf4j
 // tell it's a managed bean
 @Component
 @RequiredArgsConstructor
@@ -33,6 +35,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     protected void doFilterInternal(@NonNull HttpServletRequest request,
                                     @NonNull HttpServletResponse response,
                                     @NonNull FilterChain filterChain) throws ServletException, IOException {
+        log.info("JwtAuthenticationFilter --> doFilterInternal");
         // all filters should be not null
         // ex. we can add header to the response here
         // filter chain: the chain of responsibility design pattern, contains the list of the other
@@ -42,11 +45,12 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         final String authHeader = request.getHeader("Authorization");
         final String jwt;
         final String userEmail;
-
+        log.info("JwtAuthenticationFilter --> doFilterInternal --> auth header = " + authHeader);
 
         // bearer token should always start with "Bearer " word
         // missing JWT token
         if (authHeader == null || !authHeader.startsWith("Bearer ")) {
+            log.info("JwtAuthenticationFilter --> doFilterInternal --> token doesn't exist");
             filterChain.doFilter(request, response);
             return;
         }
@@ -54,15 +58,18 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         // extract token from header
         // start after "Bearer " word
         jwt = authHeader.substring(7);
+        log.info("JwtAuthenticationFilter --> doFilterInternal --> token: " + jwt);
 
-        //extract userEmail from JWT token using JwtService;
+        // extract userEmail from JWT token using JwtService
         userEmail = jwtService.extractUsername(jwt);
 
+        log.info("JwtAuthenticationFilter --> doFilterInternal --> userEmail: " + userEmail);
         // check if the user is already authenticated
         if (userEmail != null && SecurityContextHolder.getContext().getAuthentication() == null) {
             // the user is not authenticated
-            UserDetails userDetails = this.userDetailsService.loadUserByUsername(userEmail);
-            if(jwtService.isTokenValid(jwt, userDetails)){
+            User userDetails = (User) this.userDetailsService.loadUserByUsername(userEmail);
+            if (jwtService.isTokenValid(jwt, userDetails)) {
+                log.info("JwtAuthenticationFilter --> doFilterInternal --> the token is valid");
                 UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(
                         userDetails, null, userDetails.getAuthorities()
                 );
