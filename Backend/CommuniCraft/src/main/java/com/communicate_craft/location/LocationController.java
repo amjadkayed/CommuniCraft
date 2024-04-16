@@ -28,12 +28,6 @@ public class LocationController {
         if (result.hasErrors()) {
             return new ResponseEntity<>(Converter.convertBindingResultToErrorResponse(result), HttpStatus.BAD_REQUEST);
         }
-        // check if the location is already exists
-        Optional<Location> checkResult = locationServiceImpl.checkIfLocationExists(location.getCityName(), location.getStateName(), location.getCountryName());
-        if (checkResult.isPresent()) {
-            log.info("LocationController --> createLocation --> location is already exists");
-            return ResponseEntity.ok(checkResult);
-        }
         return ResponseEntity.status(HttpStatus.CREATED)
                 .body(locationServiceImpl.saveLocation(location));
     }
