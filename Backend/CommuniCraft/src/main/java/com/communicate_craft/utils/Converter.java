@@ -1,6 +1,7 @@
 package com.communicate_craft.utils;
 
 import com.communicate_craft.authentication.dto.RegisterRequest;
+import com.communicate_craft.crafter.Crafter;
 import com.communicate_craft.location.Location;
 import com.communicate_craft.skill_feature.categories.SkillCategory;
 import com.communicate_craft.skill_feature.skills.Skill;
@@ -46,6 +47,12 @@ public class Converter {
         skill.setSkillCategory(category);
         skill.setSkillName(skillDTO.getSkillName());
         return skill;
+    }
+
+    public static Crafter convertUserToCrafter(User user) {
+        if (user == null)
+            throw new IllegalArgumentException("User is required");
+        return new Crafter(user.getUserID().longValue(), "", true, null, user);
     }
 
     public static User convertUserUpdateDtoToUser(RegisterRequest newUser, User oldUser, Location location) {

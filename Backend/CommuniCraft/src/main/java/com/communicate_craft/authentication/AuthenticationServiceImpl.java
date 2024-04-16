@@ -3,6 +3,7 @@ package com.communicate_craft.authentication;
 import com.communicate_craft.authentication.dto.AuthenticationRequest;
 import com.communicate_craft.authentication.dto.AuthenticationResponse;
 import com.communicate_craft.authentication.dto.RegisterRequest;
+import com.communicate_craft.crafter.CrafterService;
 import com.communicate_craft.enums.Role;
 import com.communicate_craft.exceprions.DuplicateEntryException;
 import com.communicate_craft.location.Location;
@@ -31,6 +32,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
     private final LocationServiceImpl locationServiceImpl;
     private final AuthenticationManager authenticationManager;
     private final PasswordEncoder passwordEncoder;
+    private final CrafterService crafterService;
 
     private void checkDuplicatedUserFields(User user) {
         // check if email, username, or phone number are existed before
@@ -50,7 +52,10 @@ public class AuthenticationServiceImpl implements AuthenticationService {
         // 2- validate user's location
         // 3- convert RegisterRequest into User
         // 4- encode the password
-        // 6- generate the token and return it with the user
+        // 5- check for duplication in phone, username, email
+        // 6- save the user
+        // 7- generate the token and return it with the user
+        // 8- if the user is a crafter then save it
         log.error("AuthenticationServiceImpl --> registerUser --> username:" + request.getUsername());
         Validation.validateUserRegistrationRole(request, userRoles);
         Optional<Location> location = locationServiceImpl.findById(request.getLocationId());
@@ -60,11 +65,16 @@ public class AuthenticationServiceImpl implements AuthenticationService {
         user.setPassword(passwordEncoder.encode(user.getPassword()));
         checkDuplicatedUserFields(user);
         var jwtToken = jwtService.generateToken(userRepository.save(user));
+        Object userToReturn = user;
+        if (user.getRole().equals(Role.CRAFTER)) {
+            log.info("AuthenticationServiceImpl --> registerUser --> user: " + user.getUsername() + " is a crafter");
+            userToReturn = crafterService.addCrafter(Converter.convertUserToCrafter(user));
+        }
         log.info("AuthenticationServiceImpl --> registerUser --> token was generated for username: " + user.getUsername());
         return AuthenticationResponse
                 .builder()
                 .token(jwtToken)
-                .user(user)
+                .user(userToReturn)
                 .build();
     }
 
