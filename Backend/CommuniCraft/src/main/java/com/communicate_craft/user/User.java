@@ -1,5 +1,6 @@
 package com.communicate_craft.user;
 
+import com.communicate_craft.crafter.Crafter;
 import com.communicate_craft.enums.Role;
 import com.communicate_craft.location.Location;
 import com.fasterxml.jackson.annotation.JsonIgnore;
@@ -86,6 +87,10 @@ public class User implements UserDetails {
     @ManyToOne
     @JoinColumn(name = "location_location_id")
     private Location location;
+
+    @OneToOne(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+    @JsonIgnore
+    private transient Crafter crafter;
 
     public User() {
         totalSalary = BigDecimal.valueOf(0);

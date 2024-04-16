@@ -78,7 +78,6 @@ public class CommunicateCraftApplication {
             skillService.addSkill(new SkillDTO("decorative wreath making", 10L));
             skillService.addSkill(new SkillDTO("arrangement of flowers", 10L));
 
-
             // add Amjad as admin
             adminService.registerNewAdmin(new RegisterRequest("admin1", "Amjad", "Kayed", "admin1@communicraft.com",
                     "admin1234", "0599887766", 1, Role.ADMIN));
