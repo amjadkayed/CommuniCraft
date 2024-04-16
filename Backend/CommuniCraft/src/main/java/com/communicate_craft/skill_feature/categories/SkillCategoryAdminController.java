@@ -1,4 +1,4 @@
-package com.communicate_craft.skill_category;
+package com.communicate_craft.skill_feature.categories;
 
 import com.communicate_craft.utils.Converter;
 import com.communicate_craft.utils.ErrorsResponse;
@@ -42,6 +42,8 @@ public class SkillCategoryAdminController {
             skillCategory.setCategoryId(categoryId);
             return ResponseEntity.ok(skillCategoryService.updateCategory(skillCategory));
         } catch (EntityNotFoundException e) {
+            return new ResponseEntity<>(new ErrorsResponse(e.getMessage()), HttpStatus.NOT_FOUND);
+        }catch (IllegalArgumentException e){
             return new ResponseEntity<>(new ErrorsResponse(e.getMessage()), HttpStatus.BAD_REQUEST);
         }
     }
@@ -53,7 +55,7 @@ public class SkillCategoryAdminController {
             skillCategoryService.deleteCategory(categoryId);
             return ResponseEntity.ok().build();
         } catch (EntityNotFoundException e) {
-            return new ResponseEntity<>(new ErrorsResponse(e.getMessage()), HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>(new ErrorsResponse(e.getMessage()), HttpStatus.NOT_FOUND);
         }
     }
 }

@@ -1,4 +1,4 @@
-package com.communicate_craft.skill_category;
+package com.communicate_craft.skill_feature.categories;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 

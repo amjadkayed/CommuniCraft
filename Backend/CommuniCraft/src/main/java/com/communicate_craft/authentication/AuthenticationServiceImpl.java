@@ -71,7 +71,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
     @Override
     public AuthenticationResponse register(RegisterRequest request) {
         log.info("AuthenticationServiceImpl --> register --> registering a user with email: " + request.getEmail());
-        return registerUser(request, Role.CLIENT, Role.CRAFTER, Role.ADMIN);
+        return registerUser(request, Role.CLIENT, Role.CRAFTER);
     }
 
     @Override

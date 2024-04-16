@@ -1,4 +1,4 @@
-package com.communicate_craft.security.filter;
+package com.communicate_craft.authentication;
 
 import com.communicate_craft.authentication.JwtService;
 import com.communicate_craft.user.User;
@@ -17,6 +17,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
+import java.io.PrintWriter;
 
 @Slf4j
 // tell it's a managed bean
@@ -61,24 +62,35 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         log.info("JwtAuthenticationFilter --> doFilterInternal --> token: " + jwt);
 
         // extract userEmail from JWT token using JwtService
-        userEmail = jwtService.extractUsername(jwt);
-
-        log.info("JwtAuthenticationFilter --> doFilterInternal --> userEmail: " + userEmail);
-        // check if the user is already authenticated
-        if (userEmail != null && SecurityContextHolder.getContext().getAuthentication() == null) {
-            // the user is not authenticated
-            User userDetails = (User) this.userDetailsService.loadUserByUsername(userEmail);
-            if (jwtService.isTokenValid(jwt, userDetails)) {
-                log.info("JwtAuthenticationFilter --> doFilterInternal --> the token is valid");
-                UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(
-                        userDetails, null, userDetails.getAuthorities()
-                );
-                authToken.setDetails(
-                        new WebAuthenticationDetailsSource().buildDetails(request)
-                );
-                SecurityContextHolder.getContext().setAuthentication(authToken);
+        try {
+            userEmail = jwtService.extractUsername(jwt);
+            log.info("JwtAuthenticationFilter --> doFilterInternal --> userEmail: " + userEmail);
+            // check if the user is already authenticated
+            if (userEmail != null && SecurityContextHolder.getContext().getAuthentication() == null) {
+                // the user is not authenticated
+                User userDetails = (User) this.userDetailsService.loadUserByUsername(userEmail);
+                if (jwtService.isTokenValid(jwt, userDetails)) {
+                    log.info("JwtAuthenticationFilter --> doFilterInternal --> the token is valid");
+                    UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(
+                            userDetails, null, userDetails.getAuthorities()
+                    );
+                    authToken.setDetails(
+                            new WebAuthenticationDetailsSource().buildDetails(request)
+                    );
+                    SecurityContextHolder.getContext().setAuthentication(authToken);
+                }
             }
+        } catch (Exception e) {
+            response.setStatus(HttpServletResponse.SC_FORBIDDEN);
+            response.setContentType("application/json");
+            PrintWriter writer = response.getWriter();
+            writer.write("{\"error\": \""+e.getMessage()+"\"}");
+            writer.flush();
+            log.error("JwtAuthenticationFilter --> doFilterInternal --> invalid token", e);
+            return;
         }
+
+
         filterChain.doFilter(request, response);
     }
 }

@@ -1,4 +1,4 @@
-package com.communicate_craft.skill_category;
+package com.communicate_craft.skill_feature.categories;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

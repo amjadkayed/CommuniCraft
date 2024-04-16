@@ -2,9 +2,10 @@ package com.communicate_craft.utils;
 
 import com.communicate_craft.authentication.dto.RegisterRequest;
 import com.communicate_craft.location.Location;
+import com.communicate_craft.skill_feature.categories.SkillCategory;
+import com.communicate_craft.skill_feature.skills.Skill;
+import com.communicate_craft.skill_feature.skills.SkillDTO;
 import com.communicate_craft.user.User;
-import org.springframework.http.ResponseEntity;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
 
@@ -13,7 +14,6 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class Converter {
-    private final PasswordEncoder passwordEncoder;
 
     private Converter() {
         throw new IllegalStateException("Converter class");
@@ -38,6 +38,14 @@ public class Converter {
         user.setLocation(location);
         user.setRole(registrationDTO.getRole());
         return user;
+    }
+
+    public static Skill convertSkillDtoToSkill(SkillDTO skillDTO, SkillCategory category) {
+        Skill skill = new Skill();
+        skill.setSkillId(skillDTO.getSkillId());
+        skill.setSkillCategory(category);
+        skill.setSkillName(skillDTO.getSkillName());
+        return skill;
     }
 
     public static User convertUserUpdateDtoToUser(RegisterRequest newUser, User oldUser, Location location) {

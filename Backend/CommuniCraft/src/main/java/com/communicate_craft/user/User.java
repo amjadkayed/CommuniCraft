@@ -83,9 +83,8 @@ public class User implements UserDetails {
     @Column(name = "TotalSalary", precision = 10, scale = 2, nullable = false)
     private BigDecimal totalSalary;
 
-    @ManyToOne(cascade = CascadeType.PERSIST)
+    @ManyToOne
     @JoinColumn(name = "location_location_id")
-    @JsonIgnore
     private Location location;
 
     public User() {
