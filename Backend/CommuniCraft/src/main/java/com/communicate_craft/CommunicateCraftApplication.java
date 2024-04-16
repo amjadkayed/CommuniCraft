@@ -1,7 +1,6 @@
 package com.communicate_craft;
 
 import com.communicate_craft.admin.AdminService;
-import com.communicate_craft.authentication.AuthenticationService;
 import com.communicate_craft.authentication.dto.RegisterRequest;
 import com.communicate_craft.enums.Role;
 import com.communicate_craft.location.Location;

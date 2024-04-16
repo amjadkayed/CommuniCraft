@@ -1,6 +1,5 @@
 package com.communicate_craft.authentication;
 
-import com.communicate_craft.authentication.JwtService;
 import com.communicate_craft.user.User;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
@@ -84,7 +83,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             response.setStatus(HttpServletResponse.SC_FORBIDDEN);
             response.setContentType("application/json");
             PrintWriter writer = response.getWriter();
-            writer.write("{\"error\": \""+e.getMessage()+"\"}");
+            writer.write("{\"error\": \"" + e.getMessage() + "\"}");
             writer.flush();
             log.error("JwtAuthenticationFilter --> doFilterInternal --> invalid token", e);
             return;

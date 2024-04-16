@@ -1,6 +1,5 @@
 package com.communicate_craft.skill_feature.skills;
 
-import com.communicate_craft.skill_feature.categories.SkillCategoryService;
 import com.communicate_craft.utils.Converter;
 import com.communicate_craft.utils.ErrorsResponse;
 import jakarta.persistence.EntityNotFoundException;
@@ -17,7 +16,6 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/api/admin/skill")
 @RequiredArgsConstructor
 public class SkillAdminController {
-    private final SkillCategoryService skillCategoryService;
     private final SkillService skillService;
 
     @PostMapping("")
