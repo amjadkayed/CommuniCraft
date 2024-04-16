@@ -1,8 +1,10 @@
 package com.communicate_craft.utils;
 
-import com.communicate_craft.dto.UserRegistrationDTO;
-import com.communicate_craft.model.Location;
-import com.communicate_craft.model.User;
+import com.communicate_craft.authentication.dto.RegisterRequest;
+import com.communicate_craft.location.Location;
+import com.communicate_craft.user.User;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
 
@@ -11,6 +13,8 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class Converter {
+    private final PasswordEncoder passwordEncoder;
+
     private Converter() {
         throw new IllegalStateException("Converter class");
     }
@@ -23,24 +27,25 @@ public class Converter {
         return errors;
     }
 
-    public static User convertUserDtoToUser(UserRegistrationDTO registrationDTO, Location location) {
+    public static User convertUserDtoToUser(RegisterRequest registrationDTO, Location location) {
         User user = new User();
         user.setUsername(registrationDTO.getUsername());
         user.setFirstName(registrationDTO.getFirstName());
         user.setLastName(registrationDTO.getLastName());
         user.setEmail(registrationDTO.getEmail());
-        user.setPasswordHash(registrationDTO.getPasswordHash());
+        user.setPassword(registrationDTO.getPassword());
         user.setPhoneNumber(registrationDTO.getPhoneNumber());
         user.setLocation(location);
+        user.setRole(registrationDTO.getRole());
         return user;
     }
 
-    public static User convertUserUpdateDtoToUser(UserRegistrationDTO newUser, User oldUser, Location location) {
+    public static User convertUserUpdateDtoToUser(RegisterRequest newUser, User oldUser, Location location) {
         oldUser.setUsername(newUser.getUsername());
         oldUser.setFirstName(newUser.getFirstName());
         oldUser.setLastName(newUser.getLastName());
         oldUser.setEmail(newUser.getEmail());
-        oldUser.setPasswordHash(newUser.getPasswordHash());
+        oldUser.setPassword(newUser.getPassword());
         oldUser.setPhoneNumber(newUser.getPhoneNumber());
         oldUser.setUserImageURL(newUser.getUserImageURL());
         oldUser.setLastOnlineTime(LocalDateTime.now());

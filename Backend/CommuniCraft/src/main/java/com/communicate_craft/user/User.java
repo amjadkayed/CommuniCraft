@@ -1,24 +1,31 @@
-package com.communicate_craft.model;
+package com.communicate_craft.user;
 
-import com.communicate_craft.enums.UserType;
+import com.communicate_craft.enums.Role;
+import com.communicate_craft.location.Location;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.*;
-import jakarta.validation.constraints.Email;
-import jakarta.validation.constraints.NotEmpty;
-import jakarta.validation.constraints.Pattern;
-import jakarta.validation.constraints.Size;
-import lombok.Data;
+import jakarta.validation.constraints.*;
+import lombok.Getter;
+import lombok.Setter;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.util.Collection;
+import java.util.List;
 
-@Data
+@Getter
+@Setter
 @Entity
 @Table(name = "Users")
-public class User {
+public class User implements UserDetails {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue
     @Column(name = "UserID")
     private Integer userID;
 
@@ -39,11 +46,12 @@ public class User {
     @NotEmpty(message = "empty email")
     @Email
     @Column(name = "Email")
+    @JsonIgnoreProperties
     private String email;
 
     @NotEmpty(message = "empty password")
-    @Column(name = "PasswordHash")
-    private String passwordHash;
+    @Column(name = "Password")
+    private String password;
 
     @NotEmpty(message = "empty phone number")
     @Size(min = 10, max = 10)
@@ -51,9 +59,10 @@ public class User {
     @Column(name = "PhoneNumber", nullable = false)
     private String phoneNumber;
 
+    @NotNull
     @Enumerated(EnumType.STRING)
-    @Column(name = "UserType")
-    private UserType userType;
+    @Column(name = "Role")
+    private Role role;
 
     @Column(name = "UserImageURL")
     private String userImageURL;
@@ -79,10 +88,60 @@ public class User {
     @JsonIgnore
     private Location location;
 
-    public User(){
+    public User() {
         totalSalary = BigDecimal.valueOf(0);
         numberOfReviews = 0;
         signUpDate = LocalDateTime.now();
         lastOnlineTime = LocalDateTime.now();
+    }
+
+    @Override
+    public Collection<? extends GrantedAuthority> getAuthorities() {
+        return List.of(new SimpleGrantedAuthority(role.name()));
+    }
+
+    @Override
+    public String getUsername() {
+        return username;
+    }
+
+    @Override
+    public boolean isAccountNonExpired() {
+        return true;
+    }
+
+    @Override
+    public boolean isAccountNonLocked() {
+        return true;
+    }
+
+    @Override
+    public boolean isCredentialsNonExpired() {
+        return true;
+    }
+
+    @Override
+    public boolean isEnabled() {
+        return true;
+    }
+
+    //----------------- to make password, email deserializable but not serializable
+
+    @Override
+    @JsonIgnore
+    public String getPassword() {
+        return password;
+    }
+    @JsonProperty
+    public void setPassword(String password) {
+        this.password = password;
+    }
+    @JsonIgnore
+    public String getEmail() {
+        return email;
+    }
+    @JsonProperty
+    public void setEmail(String email) {
+        this.email = email;
     }
 }

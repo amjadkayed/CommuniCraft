@@ -1,8 +1,7 @@
 package com.communicate_craft.enums;
 
-public enum UserType {
+public enum Role {
     CRAFTER,
     ADMIN,
     CLIENT
-
 }

@@ -1,8 +1,6 @@
-package com.communicate_craft.service;
+package com.communicate_craft.user;
 
 import com.communicate_craft.exceprions.DuplicateEntryException;
-import com.communicate_craft.model.User;
-import com.communicate_craft.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -13,7 +11,6 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class UserService {
     private final UserRepository userRepository;
-
     public User saveUser(User user) throws DuplicateEntryException {
         if (userRepository.findByEmail(user.getEmail()).isPresent()) {
             throw new DuplicateEntryException("Email already exists: " + user.getEmail());

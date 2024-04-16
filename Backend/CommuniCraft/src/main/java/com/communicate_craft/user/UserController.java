@@ -1,12 +1,9 @@
-package com.communicate_craft.controller;
+package com.communicate_craft.user;
 
-import com.communicate_craft.dto.UserRegistrationDTO;
-import com.communicate_craft.enums.UserType;
+import com.communicate_craft.authentication.dto.RegisterRequest;
 import com.communicate_craft.exceprions.DuplicateEntryException;
-import com.communicate_craft.model.Location;
-import com.communicate_craft.model.User;
-import com.communicate_craft.service.LocationService;
-import com.communicate_craft.service.UserService;
+import com.communicate_craft.location.Location;
+import com.communicate_craft.location.LocationServiceImpl;
 import com.communicate_craft.utils.Converter;
 import com.communicate_craft.utils.ErrorsResponse;
 import jakarta.validation.Valid;
@@ -14,6 +11,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.java.Log;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
@@ -21,12 +19,12 @@ import java.util.Optional;
 
 @Log
 @RestController
-@RequestMapping("/api/users")
+@RequestMapping("/api/public/users")
 @RequiredArgsConstructor
 public class UserController {
 
     private final UserService userService;
-    private final LocationService locationService;
+    private final LocationServiceImpl locationServiceImpl;
 
     @GetMapping("/{userId}")
     public ResponseEntity<Object> getUserById(@PathVariable Integer userId) {
@@ -38,30 +36,12 @@ public class UserController {
         }
     }
 
-    @PostMapping("/register")
-    public ResponseEntity<Object> createUser(@Valid @RequestBody UserRegistrationDTO registrationDTO, BindingResult result) {
-        if (result.hasErrors()) {
-            return new ResponseEntity<>(Converter.convertBindingResultToErrorResponse(result), HttpStatus.BAD_REQUEST);
-        }
-        Optional<Location> location = locationService.findById(registrationDTO.getLocationId());
-        if (location.isEmpty())
-            return new ResponseEntity<>(new ErrorsResponse("Location not found with id: " + registrationDTO.getLocationId()), HttpStatus.BAD_REQUEST);
-        User user = Converter.convertUserDtoToUser(registrationDTO, location.get());
-        user.setUserType(UserType.CLIENT);
-        try {
-            return ResponseEntity.status(HttpStatus.CREATED)
-                    .body(userService.saveUser(user));
-        } catch (DuplicateEntryException e) {
-            return new ResponseEntity<>(new ErrorsResponse(e.getMessage()), HttpStatus.BAD_REQUEST);
-        }
-    }
-
     @PutMapping("/{userId}")
-    public ResponseEntity<Object> updateUser(@PathVariable Integer userId, @Valid @RequestBody UserRegistrationDTO updateUserDTO, BindingResult result) {
+    public ResponseEntity<Object> updateUser(@PathVariable Integer userId, @Valid @RequestBody RegisterRequest updateUserDTO, BindingResult result) {
         if (result.hasErrors()) {
             return new ResponseEntity<>(Converter.convertBindingResultToErrorResponse(result), HttpStatus.BAD_REQUEST);
         }
-        Optional<Location> location = locationService.findById(updateUserDTO.getLocationId());
+        Optional<Location> location = locationServiceImpl.findById(updateUserDTO.getLocationId());
         if (location.isEmpty())
             return new ResponseEntity<>(new ErrorsResponse("Location not found with id: " + updateUserDTO.getLocationId()), HttpStatus.BAD_REQUEST);
 
