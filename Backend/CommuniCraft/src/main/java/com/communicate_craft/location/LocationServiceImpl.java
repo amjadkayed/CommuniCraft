@@ -12,9 +12,20 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class LocationServiceImpl implements LocationService {
     private final LocationRepository locationRepository;
+    public Optional<Location> checkIfLocationExists(String cityName, String stateName, String countryName) {
+        log.info("LocationService --> checkIfLocationExists");
+        Location existingLocation = locationRepository.findByCityNameAndStateNameAndCountryName(cityName, stateName, countryName);
+        return Optional.ofNullable(existingLocation);
+    }
     @Transactional
     public Location saveLocation(Location location) {
         log.info("LocationService --> saveLocation");
+        // check if the location is already exists
+        Optional<Location> checkResult = checkIfLocationExists(location.getCityName(), location.getStateName(), location.getCountryName());
+        if (checkResult.isPresent()) {
+            log.info("LocationService --> saveLocation --> location is already exists");
+            return checkResult.get();
+        }
         return locationRepository.save(location);
     }
 
@@ -23,9 +34,5 @@ public class LocationServiceImpl implements LocationService {
         return locationRepository.findById(locationId);
     }
 
-    public Optional<Location> checkIfLocationExists(String cityName, String stateName, String countryName) {
-        log.info("LocationService --> checkIfLocationExists");
-        Location existingLocation = locationRepository.findByCityNameAndStateNameAndCountryName(cityName, stateName, countryName);
-        return Optional.ofNullable(existingLocation);
-    }
+
 }

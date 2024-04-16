@@ -9,6 +9,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -18,7 +19,7 @@ import java.util.List;
 @Table(name = "Locations")
 @NoArgsConstructor
 @AllArgsConstructor
-public class Location {
+public class Location implements Serializable {
 
     @Id
     @GeneratedValue
