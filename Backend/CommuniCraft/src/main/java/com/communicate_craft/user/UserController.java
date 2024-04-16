@@ -19,14 +19,13 @@ import java.util.Optional;
 
 @Log
 @RestController
-@RequestMapping("/api/admin/users")
+@RequestMapping("/api/public/users")
 @RequiredArgsConstructor
 public class UserController {
 
     private final UserService userService;
     private final LocationServiceImpl locationServiceImpl;
 
-//    @PreAuthorize("hasAuthority('ADMIN')")
     @GetMapping("/{userId}")
     public ResponseEntity<Object> getUserById(@PathVariable Integer userId) {
         Optional<User> user = userService.findByUserId(userId);

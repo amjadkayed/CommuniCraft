@@ -3,6 +3,8 @@ package com.communicate_craft.utils;
 import com.communicate_craft.authentication.dto.RegisterRequest;
 import com.communicate_craft.location.Location;
 import com.communicate_craft.user.User;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
 
@@ -11,6 +13,8 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class Converter {
+    private final PasswordEncoder passwordEncoder;
+
     private Converter() {
         throw new IllegalStateException("Converter class");
     }

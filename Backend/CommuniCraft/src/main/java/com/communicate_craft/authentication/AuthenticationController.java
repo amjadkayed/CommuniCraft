@@ -3,6 +3,7 @@ package com.communicate_craft.authentication;
 import com.communicate_craft.authentication.dto.AuthenticationRequest;
 import com.communicate_craft.authentication.dto.AuthenticationResponse;
 import com.communicate_craft.authentication.dto.RegisterRequest;
+import com.communicate_craft.enums.Role;
 import com.communicate_craft.exceprions.DuplicateEntryException;
 import com.communicate_craft.utils.Converter;
 import com.communicate_craft.utils.ErrorsResponse;
@@ -12,7 +13,6 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.AuthenticationException;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -38,11 +38,12 @@ public class AuthenticationController {
             return ResponseEntity.status(HttpStatus.CREATED)
                     .header("Authorization", "Bearer " + response.token())
                     .body(response.user());
-        } catch (EntityNotFoundException e) {
-            log.error("AuthenticationController --> register --> location is not found");
-            return new ResponseEntity<>(new ErrorsResponse("Location with id " + request.getLocationId() + " is not found")
-                    , HttpStatus.NOT_FOUND);
-        } catch (DuplicateEntryException e) {
+        } catch (
+                EntityNotFoundException e) {
+            log.error("AuthenticationController --> register --> " + e.getMessage());
+            return new ResponseEntity<>(new ErrorsResponse(e.getMessage()), HttpStatus.NOT_FOUND);
+        } catch (DuplicateEntryException |
+                 IllegalArgumentException e) {
             log.error("AuthenticationController --> register --> " + e.getMessage());
             return new ResponseEntity<>(new ErrorsResponse(e.getMessage()), HttpStatus.BAD_REQUEST);
         }
@@ -56,9 +57,9 @@ public class AuthenticationController {
             return ResponseEntity.ok()
                     .header("Authorization", "Bearer " + response.token())
                     .body(response.user());
-        } catch (AuthenticationException e) {
-            log.error("AuthenticationController --> login --> Invalid email or password");
-            return new ResponseEntity<>(new ErrorsResponse("Invalid email or password"), HttpStatus.BAD_REQUEST);
+        } catch (Exception e) {
+            log.error("AuthenticationController --> login --> " + e.getMessage());
+            return new ResponseEntity<>(new ErrorsResponse(e.getMessage()), HttpStatus.BAD_REQUEST);
         }
     }
 }

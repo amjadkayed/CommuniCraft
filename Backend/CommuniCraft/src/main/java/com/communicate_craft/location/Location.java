@@ -4,7 +4,9 @@ import com.communicate_craft.user.User;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotEmpty;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.util.ArrayList;
@@ -14,6 +16,8 @@ import java.util.List;
 @Setter
 @Entity
 @Table(name = "Locations")
+@NoArgsConstructor
+@AllArgsConstructor
 public class Location {
 
     @Id
@@ -36,4 +40,9 @@ public class Location {
     @JsonIgnore
     private List<User> users = new ArrayList<>();
 
+    public Location(String cityName, String stateName, String countryName) {
+        this.cityName = cityName;
+        this.stateName = stateName;
+        this.countryName = countryName;
+    }
 }
