@@ -1,6 +1,6 @@
 package com.communicate_craft.config;
 
-import com.communicate_craft.user.UserRepository;
+import com.communicate_craft.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

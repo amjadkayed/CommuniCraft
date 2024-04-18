@@ -1,14 +1,14 @@
 package com.communicate_craft;
 
-import com.communicate_craft.admin.AdminService;
-import com.communicate_craft.authentication.dto.RegisterRequest;
+import com.communicate_craft.service.AdminService;
+import com.communicate_craft.dto.RegisterRequest;
 import com.communicate_craft.enums.Role;
-import com.communicate_craft.location.Location;
-import com.communicate_craft.location.LocationServiceImpl;
-import com.communicate_craft.skill_feature.categories.SkillCategory;
-import com.communicate_craft.skill_feature.categories.SkillCategoryService;
-import com.communicate_craft.skill_feature.skills.SkillDTO;
-import com.communicate_craft.skill_feature.skills.SkillService;
+import com.communicate_craft.model.Location;
+import com.communicate_craft.service_implementation.LocationServiceImpl;
+import com.communicate_craft.model.SkillCategory;
+import com.communicate_craft.service.SkillCategoryService;
+import com.communicate_craft.dto.SkillDTO;
+import com.communicate_craft.service.SkillService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
