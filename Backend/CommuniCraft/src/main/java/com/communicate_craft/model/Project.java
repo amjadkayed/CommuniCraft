@@ -13,7 +13,6 @@ import lombok.Setter;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Getter
 @Setter
@@ -66,15 +65,23 @@ public class Project {
 
     public Project(ProjectDTO projectDTO) {
         this();
+        if(projectDTO.getStatus() != null)setStatus(projectDTO.getStatus());
+        setProjectId(projectDTO.getProjectId());
         setExpectedCompletionDate(projectDTO.getExpectedCompletionDate());
         setDescription(projectDTO.getDescription());
         setTitle(projectDTO.getTitle());
+        setImageURL(projectDTO.getImageURL());
         setRequiredSkills(projectDTO.getRequiredSkills().stream()
                 .map(dto -> new ProjectSkills(dto, this))
                 .toList());
     }
+
     @JsonProperty
     public String getOwner() {
         return owner.getUsername();
+    }
+
+    public Long getOwnerId() {
+        return owner.getUserID();
     }
 }

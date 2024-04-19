@@ -1,6 +1,7 @@
 package com.communicate_craft.controller.public_controller;
 
 import com.communicate_craft.dto.ProjectDTO;
+import com.communicate_craft.enums.Status;
 import com.communicate_craft.model.Project;
 import com.communicate_craft.model.User;
 import com.communicate_craft.service.ProjectService;
@@ -31,13 +32,35 @@ public class ProjectController {
         return ResponseEntity.ok(projectService.getProjectById(projectId));
     }
 
+    @GetMapping("/showcase")
+    public ResponseEntity<Object> showcaseAndSharing() {
+        return ResponseEntity.ok(projectService.getProjectsByStatus(Status.COMPLETED));
+    }
+
     @PostMapping
     public ResponseEntity<Object> addProject(@Valid @RequestBody ProjectDTO projectDTO, BindingResult result, Authentication authentication) {
         User userDetails = (User) authentication.getPrincipal();
-        System.out.println(userDetails);
         Validator.validateBody(result);
         Project project = projectService.addProject(projectDTO, userDetails.getUserID());
         log.info("ProjectController --> project was added successfully");
         return ResponseEntity.status(HttpStatus.CREATED).body(project);
+    }
+
+    @PutMapping("/{projectId}")
+    public ResponseEntity<Object> updateProject(@PathVariable Long projectId, @Valid @RequestBody ProjectDTO projectDTO, BindingResult result, Authentication authentication) {
+        projectDTO.setProjectId(projectId);
+        User userDetails = (User) authentication.getPrincipal();
+        Validator.validateBody(result);
+        Project project = projectService.updateProject(projectDTO, userDetails.getUserID());
+        log.info("ProjectController --> project was updated successfully");
+        return ResponseEntity.ok(project);
+    }
+
+    @DeleteMapping("/{projectId}")
+    public ResponseEntity<Object> deleteProject(@PathVariable Long projectId, Authentication authentication) {
+        User userDetails = (User) authentication.getPrincipal();
+        projectService.deleteProject(projectId, userDetails.getUserID());
+        log.info("ProjectController --> project was deleted successfully");
+        return ResponseEntity.ok().build();
     }
 }
