@@ -15,6 +15,8 @@ import org.springframework.security.core.Authentication;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @Log
 @RestController
 @RequestMapping("/api/public/projects")
@@ -33,8 +35,15 @@ public class ProjectController {
     }
 
     @GetMapping("/showcase")
-    public ResponseEntity<Object> showcaseAndSharing() {
-        return ResponseEntity.ok(projectService.getProjectsByStatus(Status.COMPLETED));
+    public ResponseEntity<Object> showcaseAndSharing(@RequestParam(value = "categoryId", required = false) Long categoryId) {
+        List<Project> projects = projectService.getShowcase(categoryId);
+        return ResponseEntity.ok(projects);
+    }
+
+    @GetMapping("/library")
+    public ResponseEntity<Object> library(@RequestParam(value = "categoryId", required = false) Long categoryId) {
+        List<Project> projects = projectService.getLibrary(categoryId);
+        return ResponseEntity.ok(projects);
     }
 
     @PostMapping

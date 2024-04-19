@@ -9,6 +9,7 @@ import com.communicate_craft.repository.ProjectRepository;
 import com.communicate_craft.service.LocationService;
 import com.communicate_craft.service.ProjectService;
 import com.communicate_craft.service.UserService;
+import com.communicate_craft.utility.ProjectFilterUtils;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -50,6 +51,16 @@ public class ProjectServiceImpl implements ProjectService {
         return project;
     }
 
+    private List<Project> getProjectsByStatus(Status status) {
+        return projectRepository.findByStatus(status);
+    }
+
+    private List<Project> filterBySkillCategory(List<Project> projects, Long categoryId) {
+        if (categoryId == null)
+            return projects;
+        return ProjectFilterUtils.filterProjectsBySkillCategory(projects, categoryId);
+    }
+
     @Override
     public List<Project> getAllProjects() {
         return projectRepository.findAll();
@@ -85,7 +96,16 @@ public class ProjectServiceImpl implements ProjectService {
     }
 
     @Override
-    public List<Project> getProjectsByStatus(Status status) {
-        return projectRepository.findByStatus(status);
+    public List<Project> getShowcase(Long categoryId) {
+        List<Project> projects = getProjectsByStatus(Status.COMPLETED);
+        projects = filterBySkillCategory(projects, categoryId);
+        return projects;
+    }
+
+    @Override
+    public List<Project> getLibrary(Long categoryId) {
+        List<Project> projects = getProjectsByStatus(Status.NOT_STARTED);
+        projects = filterBySkillCategory(projects, categoryId);
+        return projects;
     }
 }
