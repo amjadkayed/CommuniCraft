@@ -9,13 +9,11 @@ import com.communicate_craft.model.User;
 import com.communicate_craft.repository.CrafterRepository;
 import com.communicate_craft.service.CrafterService;
 import com.communicate_craft.service.UserService;
-import com.communicate_craft.utility.Converter;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
-import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
@@ -62,7 +60,7 @@ public class CrafterServiceImpl implements CrafterService {
         AuthenticationResponse response = userService.register(request, Role.CRAFTER);
         User user = (User) response.user();
         log.info("CrafterServiceImpl --> register --> user: " + user.getUsername() + " is a crafter");
-        return new AuthenticationResponse(response.token(), addCrafter(Converter.convertUserToCrafter(user)));
+        return new AuthenticationResponse(response.token(), addCrafter(new Crafter(user)));
 
     }
 }

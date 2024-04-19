@@ -1,5 +1,6 @@
 package com.communicate_craft.model;
 
+import com.communicate_craft.dto.RegisterRequest;
 import com.communicate_craft.enums.Role;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
@@ -97,6 +98,18 @@ public class User implements UserDetails {
         lastOnlineTime = LocalDateTime.now();
     }
 
+    public User(RegisterRequest registrationDTO, Location location) {
+        this();
+        setUsername(registrationDTO.getUsername());
+        setFirstName(registrationDTO.getFirstName());
+        setLastName(registrationDTO.getLastName());
+        setEmail(registrationDTO.getEmail());
+        setPassword(registrationDTO.getPassword());
+        setPhoneNumber(registrationDTO.getPhoneNumber());
+        setLocation(location);
+        setRole(registrationDTO.getRole());
+    }
+
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return List.of(new SimpleGrantedAuthority(role.name()));
@@ -148,5 +161,27 @@ public class User implements UserDetails {
     @JsonProperty
     public void setEmail(String email) {
         this.email = email;
+    }
+
+    @Override
+    public String toString() {
+        return "User{" +
+                "userID=" + userID +
+                ", username='" + username + '\'' +
+                ", firstName='" + firstName + '\'' +
+                ", lastName='" + lastName + '\'' +
+                ", email='" + email + '\'' +
+                ", password='" + password + '\'' +
+                ", phoneNumber='" + phoneNumber + '\'' +
+                ", role=" + role +
+                ", userImageURL='" + userImageURL + '\'' +
+                ", signUpDate=" + signUpDate +
+                ", lastOnlineTime=" + lastOnlineTime +
+                ", rating=" + rating +
+                ", numberOfReviews=" + numberOfReviews +
+                ", totalSalary=" + totalSalary +
+                ", location=" + location +
+                ", crafter=" + crafter +
+                '}';
     }
 }

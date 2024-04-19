@@ -40,4 +40,13 @@ public class Crafter implements Serializable {
             joinColumns = @JoinColumn(name = "crafter_user_user_id"),
             inverseJoinColumns = @JoinColumn(name = "skills_SkillId"))
     private transient Set<Skill> skills = new LinkedHashSet<>();
+    public Crafter(User user){
+        if (user == null)
+            throw new IllegalArgumentException("User is required");
+        setCrafterId(user.getUserID());
+        setUser(user);
+        setBio("");
+        setIsAvailable(true);
+        setCrafterRating(null);
+    }
 }

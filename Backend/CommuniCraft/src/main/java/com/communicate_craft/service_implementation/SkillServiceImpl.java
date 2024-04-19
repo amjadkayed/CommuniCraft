@@ -6,7 +6,6 @@ import com.communicate_craft.model.SkillCategory;
 import com.communicate_craft.repository.SkillRepository;
 import com.communicate_craft.service.SkillCategoryService;
 import com.communicate_craft.service.SkillService;
-import com.communicate_craft.utility.Converter;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -31,7 +30,7 @@ public class SkillServiceImpl implements SkillService {
     }
 
     private Skill checkCategoryAndConvertToSkill(SkillDTO skillDTO) {
-        return Converter.convertSkillDtoToSkill(skillDTO, checkCategoryExists(skillDTO.getCategoryId()));
+        return new Skill(skillDTO, checkCategoryExists(skillDTO.getCategoryId()));
     }
 
     private void checkIfExistsById(Long skillId) {

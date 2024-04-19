@@ -6,8 +6,8 @@ import com.communicate_craft.model.Location;
 import com.communicate_craft.model.User;
 import com.communicate_craft.service_implementation.LocationServiceImpl;
 import com.communicate_craft.service_implementation.UserServiceImpl;
-import com.communicate_craft.utility.Converter;
 import com.communicate_craft.utility.ErrorsResponse;
+import com.communicate_craft.utility.Validator;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.java.Log;
@@ -39,9 +39,7 @@ public class UserController {
 
     @PutMapping("/{userId}")
     public ResponseEntity<Object> updateUser(@PathVariable Long userId, @Valid @RequestBody RegisterRequest updateUserDTO, BindingResult result) {
-        if (result.hasErrors()) {
-            return new ResponseEntity<>(Converter.convertBindingResultToErrorResponse(result), HttpStatus.BAD_REQUEST);
-        }
+        Validator.validateBody(result);
         Optional<Location> location = locationServiceImpl.findById(updateUserDTO.getLocationId());
         if (location.isEmpty())
             return new ResponseEntity<>(new ErrorsResponse("Location not found with id: " + updateUserDTO.getLocationId()), HttpStatus.BAD_REQUEST);
@@ -52,7 +50,7 @@ public class UserController {
             return ResponseEntity.notFound().build();
         }
         //
-        User userDetails = Converter.convertUserUpdateDtoToUser(updateUserDTO, user.get(), location.get());
+        User userDetails = null; //Converter.convertUserUpdateDtoToUser(updateUserDTO, user.get(), location.get());
         userDetails.setUserID(userId);
         try {
             User updatedUser = userServiceImpl.updateUser(userDetails);

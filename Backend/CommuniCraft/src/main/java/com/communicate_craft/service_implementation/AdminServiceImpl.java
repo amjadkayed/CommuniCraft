@@ -49,6 +49,7 @@ public class AdminServiceImpl implements AdminService {
     @Override
     public AuthenticationResponse register(RegisterRequest request, Role... roles) {
         log.info("AdminServiceImpl --> register");
+        request.setRole(Role.ADMIN);
         return userService.register(request, Role.ADMIN);
     }
 }
