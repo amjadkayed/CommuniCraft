@@ -19,4 +19,12 @@ public class SkillDTO extends Skill {
         super(skillName);
         this.categoryId = categoryId;
     }
+
+    @Override
+    public String toString() {
+        return "SkillDTO{" +
+                "categoryId=" + categoryId +
+                ", skillName=" + getSkillName() +
+                '}';
+    }
 }

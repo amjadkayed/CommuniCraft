@@ -3,9 +3,10 @@ package com.communicate_craft.service_implementation;
 import com.communicate_craft.dto.AuthenticationResponse;
 import com.communicate_craft.dto.RegisterRequest;
 import com.communicate_craft.enums.Role;
-import com.communicate_craft.service.AdminService;
 import com.communicate_craft.model.User;
 import com.communicate_craft.repository.UserRepository;
+import com.communicate_craft.service.AdminService;
+import com.communicate_craft.service.UserService;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -19,7 +20,7 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class AdminServiceImpl implements AdminService {
     private final UserRepository adminRepository;
-    private final AuthenticationServiceImpl authenticationServiceImpl;
+    private final UserService userService;
 
     @Override
     public List<User> getAllAdmins() {
@@ -28,7 +29,7 @@ public class AdminServiceImpl implements AdminService {
     }
 
     @Override
-    public User getAdminById(Integer adminId) {
+    public User getAdminById(Long adminId) {
         log.error("AdminServiceImpl --> getAdminById");
         Optional<User> admin = adminRepository.findById(adminId);
         if (admin.isEmpty())
@@ -39,15 +40,15 @@ public class AdminServiceImpl implements AdminService {
     }
 
     @Override
-    public AuthenticationResponse registerNewAdmin(RegisterRequest request) {
-        log.error("AdminServiceImpl --> registerNewAdmin");
-        return authenticationServiceImpl.registerUser(request, Role.ADMIN);
-    }
-
-    @Override
-    public void deleteAdminById(Integer adminId) {
+    public void deleteAdminById(Long adminId) {
         log.error("AdminServiceImpl --> deleteAdminById");
         getAdminById(adminId);
         adminRepository.deleteById(adminId);
+    }
+
+    @Override
+    public AuthenticationResponse register(RegisterRequest request, Role... roles) {
+        log.error("AdminServiceImpl --> register");
+        return userService.register(request, Role.ADMIN);
     }
 }

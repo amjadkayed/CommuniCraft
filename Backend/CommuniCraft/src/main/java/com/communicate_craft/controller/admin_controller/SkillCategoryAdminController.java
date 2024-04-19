@@ -2,8 +2,8 @@ package com.communicate_craft.controller.admin_controller;
 
 import com.communicate_craft.model.SkillCategory;
 import com.communicate_craft.service.SkillCategoryService;
-import com.communicate_craft.utility.Converter;
 import com.communicate_craft.utility.ErrorsResponse;
+import com.communicate_craft.utility.Validator;
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -22,42 +22,23 @@ public class SkillCategoryAdminController {
 
     @PostMapping("")
     public ResponseEntity<Object> addNewCategory(@Valid @RequestBody SkillCategory skillCategory, BindingResult result) {
-        log.info("SkillCategoryAdminController --> addNewCategory");
-        if (result.hasErrors()) {
-            return new ResponseEntity<>(Converter.convertBindingResultToErrorResponse(result), HttpStatus.BAD_REQUEST);
-        }
-        try {
-            return ResponseEntity.status(HttpStatus.CREATED)
-                    .body(skillCategoryService.addCategory(skillCategory));
-        } catch (Exception e) {
-            return new ResponseEntity<>(new ErrorsResponse("Error while saving the category"), HttpStatus.INTERNAL_SERVER_ERROR);
-        }
+        log.info("SkillCategoryAdminController --> Adding skill category");
+        Validator.validateBody(result);
+        return ResponseEntity.status(HttpStatus.CREATED).body(skillCategoryService.addCategory(skillCategory));
     }
 
     @PutMapping("/{categoryId}")
     public ResponseEntity<Object> updateCategory(@PathVariable Long categoryId, @Valid @RequestBody SkillCategory skillCategory, BindingResult result) {
         log.info("SkillCategoryAdminController --> updateCategory");
-        if (result.hasErrors()) {
-            return new ResponseEntity<>(Converter.convertBindingResultToErrorResponse(result), HttpStatus.BAD_REQUEST);
-        }
-        try {
-            skillCategory.setCategoryId(categoryId);
-            return ResponseEntity.ok(skillCategoryService.updateCategory(skillCategory));
-        } catch (EntityNotFoundException e) {
-            return new ResponseEntity<>(new ErrorsResponse(e.getMessage()), HttpStatus.NOT_FOUND);
-        }catch (IllegalArgumentException e){
-            return new ResponseEntity<>(new ErrorsResponse(e.getMessage()), HttpStatus.BAD_REQUEST);
-        }
+        Validator.validateBody(result);
+        skillCategory.setCategoryId(categoryId);
+        return ResponseEntity.ok(skillCategoryService.updateCategory(skillCategory));
     }
 
     @DeleteMapping("/{categoryId}")
     public ResponseEntity<Object> deleteCategory(@PathVariable Long categoryId) {
         log.info("SkillCategoryAdminController --> deleteCategory");
-        try {
-            skillCategoryService.deleteCategory(categoryId);
-            return ResponseEntity.ok().build();
-        } catch (EntityNotFoundException e) {
-            return new ResponseEntity<>(new ErrorsResponse(e.getMessage()), HttpStatus.NOT_FOUND);
-        }
+        skillCategoryService.deleteCategory(categoryId);
+        return ResponseEntity.ok().build();
     }
 }

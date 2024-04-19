@@ -16,7 +16,7 @@ import java.io.Serializable;
 @AllArgsConstructor
 public class Crafter implements Serializable {
     @Id
-    @Column(name = "CrafterId", nullable = false)
+    @Column(name = "user_user_id", nullable = false)
     private Long crafterId;
 
     @Column(name = "Bio")
@@ -28,6 +28,7 @@ public class Crafter implements Serializable {
     @Column(name = "Rating")
     private Double crafterRating;
 
+    @MapsId
     @OneToOne(cascade = CascadeType.ALL, optional = false, orphanRemoval = true)
     @JoinColumn(name = "user_user_id", nullable = false)
     private User user;

@@ -1,9 +1,14 @@
 package com.communicate_craft.service_implementation;
 
-import com.communicate_craft.repository.CrafterRepository;
-import com.communicate_craft.service.CrafterService;
+import com.communicate_craft.dto.AuthenticationResponse;
+import com.communicate_craft.dto.RegisterRequest;
+import com.communicate_craft.enums.Role;
 import com.communicate_craft.model.Crafter;
 import com.communicate_craft.model.User;
+import com.communicate_craft.repository.CrafterRepository;
+import com.communicate_craft.service.CrafterService;
+import com.communicate_craft.service.UserService;
+import com.communicate_craft.utility.Converter;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -16,10 +21,11 @@ import java.util.List;
 @RequiredArgsConstructor
 public class CrafterServiceImpl implements CrafterService {
     private final CrafterRepository crafterRepository;
+    private final UserServiceImpl userServiceImpl;
     private final UserService userService;
 
     private void checkUserExists(User user) {
-        if (user == null || userService.findByUserId(user.getUserID()).isEmpty())
+        if (user == null || userServiceImpl.findByUserId(user.getUserID()).isEmpty())
             throw new EntityNotFoundException("User is not found");
     }
 
@@ -31,6 +37,18 @@ public class CrafterServiceImpl implements CrafterService {
     @Override
     public Crafter addCrafter(Crafter crafter) {
         checkUserExists(crafter.getUser());
+        System.out.println("Valid crafter");
         return crafterRepository.save(crafter);
+    }
+
+    @Override
+    public AuthenticationResponse register(RegisterRequest request, Role... roles) {
+        AuthenticationResponse response = userService.register(request, Role.CRAFTER);
+        if(response != null) {
+            User user = (User) response.user();
+            log.info("CrafterServiceImpl --> register --> user: " + user.getUsername() + " is a crafter");
+            addCrafter(Converter.convertUserToCrafter(user));
+        }
+        return response;
     }
 }

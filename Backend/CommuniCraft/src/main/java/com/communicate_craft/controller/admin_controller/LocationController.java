@@ -1,8 +1,8 @@
 package com.communicate_craft.controller.admin_controller;
 
-import com.communicate_craft.service_implementation.LocationServiceImpl;
 import com.communicate_craft.model.Location;
-import com.communicate_craft.utility.Converter;
+import com.communicate_craft.service.LocationService;
+import com.communicate_craft.utility.Validator;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -16,20 +16,19 @@ import org.springframework.web.bind.annotation.RestController;
 
 @Slf4j
 @RestController
-@RequestMapping("/api/public/locations")
+@RequestMapping("/api/admin/locations")
 @RequiredArgsConstructor
 public class LocationController {
 
-    private final LocationServiceImpl locationServiceImpl;
+    private final LocationService locationService;
 
     @PostMapping
     public ResponseEntity<Object> createLocation(@Valid @RequestBody Location location, BindingResult result) {
-        log.info("LocationController --> createLocation --> creating a new location");
-        if (result.hasErrors()) {
-            return new ResponseEntity<>(Converter.convertBindingResultToErrorResponse(result), HttpStatus.BAD_REQUEST);
-        }
-        return ResponseEntity.status(HttpStatus.CREATED)
-                .body(locationServiceImpl.saveLocation(location));
+        log.info("LocationController --> creating location: {}", location);
+        Validator.validateBody(result);
+        Location savedLocation = locationService.saveLocation(location);
+        log.info("Location created successfully with ID: {}", savedLocation.getId());
+        return ResponseEntity.status(HttpStatus.CREATED).body(savedLocation);
     }
 
 }

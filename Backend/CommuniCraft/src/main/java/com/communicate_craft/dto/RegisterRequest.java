@@ -15,18 +15,20 @@ import lombok.Setter;
 @AllArgsConstructor
 public class RegisterRequest extends User {
     @NotNull(message = "Location ID cannot be null")
-    private Integer locationId;
+    private Long locationId;
 
-    public RegisterRequest(String username, String firstName, String lastName,
-                           String email, String password,
-                           String phoneNumber, Integer locationId, Role role) {
-        setUsername(username);
-        setFirstName(firstName);
-        setLastName(lastName);
-        setEmail(email);
-        setPassword(password);
-        setPhoneNumber(phoneNumber);
+    public RegisterRequest(UserPersonalInfo userPersonalInfo, Long locationId, Role role) {
+        extractUserPersonalInfo(userPersonalInfo);
         setRole(role);
         this.locationId = locationId;
+    }
+
+    private void extractUserPersonalInfo(UserPersonalInfo userPersonalInfo) {
+        setUsername(userPersonalInfo.username());
+        setFirstName(userPersonalInfo.firstName());
+        setLastName(userPersonalInfo.lastName());
+        setEmail(userPersonalInfo.email());
+        setPassword(userPersonalInfo.password());
+        setPhoneNumber(userPersonalInfo.phoneNumber());
     }
 }

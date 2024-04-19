@@ -5,7 +5,7 @@ import com.communicate_craft.exception.DuplicateEntryException;
 import com.communicate_craft.model.Location;
 import com.communicate_craft.model.User;
 import com.communicate_craft.service_implementation.LocationServiceImpl;
-import com.communicate_craft.service_implementation.UserService;
+import com.communicate_craft.service_implementation.UserServiceImpl;
 import com.communicate_craft.utility.Converter;
 import com.communicate_craft.utility.ErrorsResponse;
 import jakarta.validation.Valid;
@@ -23,13 +23,13 @@ import java.util.Optional;
 @RequestMapping("/api/public/users")
 @RequiredArgsConstructor
 public class UserController {
-
-    private final UserService userService;
+    //todo: fix everything
+    private final UserServiceImpl userServiceImpl;
     private final LocationServiceImpl locationServiceImpl;
 
     @GetMapping("/{userId}")
-    public ResponseEntity<Object> getUserById(@PathVariable Integer userId) {
-        Optional<User> user = userService.findByUserId(userId);
+    public ResponseEntity<Object> getUserById(@PathVariable Long userId) {
+        Optional<User> user = userServiceImpl.findByUserId(userId);
         if (user.isPresent()) {
             return ResponseEntity.ok(user);
         } else {
@@ -38,7 +38,7 @@ public class UserController {
     }
 
     @PutMapping("/{userId}")
-    public ResponseEntity<Object> updateUser(@PathVariable Integer userId, @Valid @RequestBody RegisterRequest updateUserDTO, BindingResult result) {
+    public ResponseEntity<Object> updateUser(@PathVariable Long userId, @Valid @RequestBody RegisterRequest updateUserDTO, BindingResult result) {
         if (result.hasErrors()) {
             return new ResponseEntity<>(Converter.convertBindingResultToErrorResponse(result), HttpStatus.BAD_REQUEST);
         }
@@ -47,7 +47,7 @@ public class UserController {
             return new ResponseEntity<>(new ErrorsResponse("Location not found with id: " + updateUserDTO.getLocationId()), HttpStatus.BAD_REQUEST);
 
         // check if the user exists
-        Optional<User> user = userService.findByUserId(userId);
+        Optional<User> user = userServiceImpl.findByUserId(userId);
         if (user.isEmpty()) {
             return ResponseEntity.notFound().build();
         }
@@ -55,7 +55,7 @@ public class UserController {
         User userDetails = Converter.convertUserUpdateDtoToUser(updateUserDTO, user.get(), location.get());
         userDetails.setUserID(userId);
         try {
-            User updatedUser = userService.updateUser(userDetails);
+            User updatedUser = userServiceImpl.updateUser(userDetails);
             return ResponseEntity.ok(updatedUser);
         } catch (DuplicateEntryException e) {
             return new ResponseEntity<>(new ErrorsResponse(e.getMessage()), HttpStatus.BAD_REQUEST);
@@ -63,12 +63,12 @@ public class UserController {
     }
 
     @DeleteMapping("/{userId}")
-    public ResponseEntity<Void> deleteUser(@PathVariable Integer userId) {
-        Optional<User> user = userService.findByUserId(userId);
+    public ResponseEntity<Void> deleteUser(@PathVariable Long userId) {
+        Optional<User> user = userServiceImpl.findByUserId(userId);
         if (user.isEmpty()) {
             return ResponseEntity.notFound().build();
         }
-        userService.deleteUser(userId);
+        userServiceImpl.deleteUser(userId);
         return ResponseEntity.ok().build();
     }
 

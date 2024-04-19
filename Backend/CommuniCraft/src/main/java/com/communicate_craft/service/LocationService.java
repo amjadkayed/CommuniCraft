@@ -6,6 +6,6 @@ import java.util.Optional;
 
 public interface LocationService {
     Location saveLocation(Location location);
-    Optional<Location> findById(Integer locationId);
+    Optional<Location> findById(Long locationId);
     Optional<Location> checkIfLocationExists(String cityName, String stateName, String countryName);
 }

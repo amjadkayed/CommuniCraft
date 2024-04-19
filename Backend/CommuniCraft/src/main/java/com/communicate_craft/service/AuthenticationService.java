@@ -5,8 +5,6 @@ import com.communicate_craft.dto.AuthenticationResponse;
 import com.communicate_craft.dto.RegisterRequest;
 import org.springframework.security.core.AuthenticationException;
 
-public interface AuthenticationService {
-    AuthenticationResponse register(RegisterRequest request);
+public interface AuthenticationService extends RegistrationService{
     AuthenticationResponse authenticate(AuthenticationRequest request) throws AuthenticationException;
-
 }

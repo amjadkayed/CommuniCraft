@@ -1,14 +1,15 @@
 package com.communicate_craft;
 
-import com.communicate_craft.service.AdminService;
 import com.communicate_craft.dto.RegisterRequest;
+import com.communicate_craft.dto.SkillDTO;
+import com.communicate_craft.dto.UserPersonalInfo;
 import com.communicate_craft.enums.Role;
 import com.communicate_craft.model.Location;
-import com.communicate_craft.service_implementation.LocationServiceImpl;
 import com.communicate_craft.model.SkillCategory;
+import com.communicate_craft.service.AdminService;
 import com.communicate_craft.service.SkillCategoryService;
-import com.communicate_craft.dto.SkillDTO;
 import com.communicate_craft.service.SkillService;
+import com.communicate_craft.service_implementation.LocationServiceImpl;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
@@ -79,8 +80,8 @@ public class CommunicateCraftApplication {
             skillService.addSkill(new SkillDTO("arrangement of flowers", 10L));
 
             // add Amjad as admin
-            adminService.registerNewAdmin(new RegisterRequest("admin1", "Amjad", "Kayed", "admin1@communicraft.com",
-                    "admin1234", "0599887766", 1, Role.ADMIN));
+            adminService.register(new RegisterRequest(new UserPersonalInfo("admin1", "Amjad", "Kayed", "admin1@communicraft.com",
+                    "admin1234", "0599887766"), 1L, Role.ADMIN));
             log.info("Amjad is an admin now o_o");
         };
     }

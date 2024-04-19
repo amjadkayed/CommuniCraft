@@ -1,13 +1,11 @@
 package com.communicate_craft.controller.public_controller;
 
-import com.communicate_craft.service_implementation.AuthenticationServiceImpl;
 import com.communicate_craft.dto.AuthenticationRequest;
 import com.communicate_craft.dto.AuthenticationResponse;
 import com.communicate_craft.dto.RegisterRequest;
-import com.communicate_craft.exception.DuplicateEntryException;
-import com.communicate_craft.utility.Converter;
-import com.communicate_craft.utility.ErrorsResponse;
-import jakarta.persistence.EntityNotFoundException;
+import com.communicate_craft.service.AuthenticationService;
+import com.communicate_craft.service_implementation.RegistrationServiceImpl;
+import com.communicate_craft.utility.Validator;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -25,42 +23,25 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/api/auth")
 public class AuthenticationController {
 
-    private final AuthenticationServiceImpl authenticationServiceImpl;
+    private final AuthenticationService authenticationService;
 
     @PostMapping("/register")
     public ResponseEntity<Object> register(@Valid @RequestBody RegisterRequest request, BindingResult result) {
-        log.info("AuthenticationController --> register --> registering a user with username: " + request.getUsername());
-        if (result.hasErrors()) {
-            return new ResponseEntity<>(Converter.convertBindingResultToErrorResponse(result), HttpStatus.BAD_REQUEST);
-        }
-        try {
-            AuthenticationResponse response = authenticationServiceImpl.register(request);
-            return ResponseEntity.status(HttpStatus.CREATED)
-                    .header("Authorization", "Bearer " + response.token())
-                    .body(response.user());
-        } catch (
-                EntityNotFoundException e) {
-            log.error("AuthenticationController --> register --> " + e.getMessage());
-            return new ResponseEntity<>(new ErrorsResponse(e.getMessage()), HttpStatus.NOT_FOUND);
-        } catch (DuplicateEntryException |
-                 IllegalArgumentException e) {
-            log.error("AuthenticationController --> register --> " + e.getMessage());
-            return new ResponseEntity<>(new ErrorsResponse(e.getMessage()), HttpStatus.BAD_REQUEST);
-        }
+        log.info("AuthenticationController -->registering a user with username: " + request.getUsername());
+        Validator.validateBody(result);
+        AuthenticationResponse response = authenticationService.register(request);
+        return ResponseEntity.status(HttpStatus.CREATED)
+                .header("Authorization", "Bearer " + response.token())
+                .body(response.user());
     }
 
     @PostMapping("/login")
     public ResponseEntity<Object> login(@RequestBody AuthenticationRequest request) {
-        log.info("AuthenticationController --> login --> logging a user with email: " + request.email());
-        try {
-            AuthenticationResponse response = authenticationServiceImpl.authenticate(request);
-            return ResponseEntity.ok()
-                    .header("Authorization", "Bearer " + response.token())
-                    .body(response.user());
-        } catch (Exception e) {
-            log.error("AuthenticationController --> login --> " + e.getMessage());
-            return new ResponseEntity<>(new ErrorsResponse(e.getMessage()), HttpStatus.BAD_REQUEST);
-        }
+        log.info("AuthenticationController --> logging a user with email: " + request.email());
+        AuthenticationResponse response = authenticationService.authenticate(request);
+        return ResponseEntity.ok()
+                .header("Authorization", "Bearer " + response.token())
+                .body(response.user());
     }
 }
 

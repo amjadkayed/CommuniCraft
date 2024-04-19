@@ -1,12 +1,10 @@
 package com.communicate_craft.controller.admin_controller;
 
-import com.communicate_craft.service.AdminService;
 import com.communicate_craft.dto.AuthenticationResponse;
 import com.communicate_craft.dto.RegisterRequest;
-import com.communicate_craft.exception.DuplicateEntryException;
-import com.communicate_craft.utility.Converter;
-import com.communicate_craft.utility.ErrorsResponse;
-import jakarta.persistence.EntityNotFoundException;
+import com.communicate_craft.enums.Role;
+import com.communicate_craft.service.AdminService;
+import com.communicate_craft.utility.Validator;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -30,51 +28,28 @@ public class AdminController {
     }
 
     @GetMapping("/{adminId}")
-    public ResponseEntity<Object> getAdminById(@PathVariable Integer adminId) {
+    public ResponseEntity<Object> getAdminById(@PathVariable Long adminId) {
         log.info("AdminUserController --> getAdminById");
-        try {
-            return ResponseEntity.ok(adminService.getAdminById(adminId));
-        } catch (EntityNotFoundException e) {
-            return ResponseEntity.notFound().build();
-        } catch (IllegalArgumentException e) {
-            return new ResponseEntity<>(new ErrorsResponse(e.getMessage()), HttpStatus.BAD_REQUEST);
-        }
+        return ResponseEntity.ok(adminService.getAdminById(adminId));
     }
 
     @PostMapping("")
     public ResponseEntity<Object> registerAdmin(@Valid @RequestBody RegisterRequest request, BindingResult result) {
-        log.info("AdminUserController --> registerAdmin --> registering a user with username: " + request.getUsername());
-        if (result.hasErrors()) {
-            return new ResponseEntity<>(Converter.convertBindingResultToErrorResponse(result), HttpStatus.BAD_REQUEST);
-        }
-
-        try {
-            AuthenticationResponse response = adminService.registerNewAdmin(request);
-            return ResponseEntity.status(HttpStatus.CREATED)
-                    .header("Authorization", "Bearer " + response.token())
-                    .body(response.user());
-        } catch (
-                EntityNotFoundException e) {
-            log.error("AdminUserController --> registerAdmin --> " + e.getMessage());
-            return new ResponseEntity<>(new ErrorsResponse(e.getMessage()), HttpStatus.NOT_FOUND);
-        } catch (DuplicateEntryException |
-                 IllegalArgumentException e) {
-            log.error("AdminUserController --> registerAdmin --> " + e.getMessage());
-            return new ResponseEntity<>(new ErrorsResponse(e.getMessage()), HttpStatus.BAD_REQUEST);
-        }
+        log.info("AdminUserController --> registering: {}", request.getUsername());
+        Validator.validateBody(result);
+        request.setRole(Role.ADMIN);
+        AuthenticationResponse response = adminService.register(request);
+        log.info("AdminController --> registered: {} successfully", request.getUsername());
+        return ResponseEntity.status(HttpStatus.CREATED)
+                .header("Authorization", "Bearer " + response.token())
+                .body(response.user());
     }
 
     @DeleteMapping("/{adminId}")
-    public ResponseEntity<Object> deleteAdmin(@PathVariable Integer adminId) {
-        log.error("AdminUserController --> deleteAdmin");
-        try {
-            adminService.deleteAdminById(adminId);
-            return ResponseEntity.ok().build();
-        } catch (EntityNotFoundException e) {
-            return ResponseEntity.notFound().build();
-        } catch (IllegalArgumentException e) {
-            return new ResponseEntity<>(new ErrorsResponse(e.getMessage()), HttpStatus.BAD_REQUEST);
-        }
+    public ResponseEntity<Object> deleteAdmin(@PathVariable Long adminId) {
+        log.info("AdminUserController --> deleting: {}", adminId);
+        adminService.deleteAdminById(adminId);
+        return ResponseEntity.ok().build();
     }
 
 }

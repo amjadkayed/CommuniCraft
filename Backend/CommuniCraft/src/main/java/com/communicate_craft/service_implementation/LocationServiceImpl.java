@@ -32,7 +32,7 @@ public class LocationServiceImpl implements LocationService {
         return locationRepository.save(location);
     }
 
-    public Optional<Location> findById(Integer locationId) {
+    public Optional<Location> findById(Long locationId) {
         log.info("LocationService --> findById");
         return locationRepository.findById(locationId);
     }

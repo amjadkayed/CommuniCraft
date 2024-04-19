@@ -26,7 +26,7 @@ public class User implements UserDetails {
     @Id
     @GeneratedValue
     @Column(name = "UserID")
-    private Integer userID;
+    private Long userID;
 
     @NotEmpty(message = "empty username")
     @Column(name = "Username")

@@ -1,11 +1,8 @@
 package com.communicate_craft.controller.public_controller;
 
 import com.communicate_craft.service.SkillService;
-import com.communicate_craft.utility.ErrorsResponse;
-import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -21,11 +18,7 @@ public class SkillPublicController {
 
     @GetMapping
     public ResponseEntity<Object> getSkillsByCategory(@RequestParam("categoryId") Long categoryId) {
-        log.info("SkillPublicController --> getSkillsByCategory");
-        try {
-            return ResponseEntity.ok(skillService.getSkillsByCategoryId(categoryId));
-        } catch (EntityNotFoundException e) {
-            return new ResponseEntity<>(new ErrorsResponse(e.getMessage()), HttpStatus.NOT_FOUND);
-        }
+        log.info("SkillPublicController --> getSkillsByCategory, categoryID: {}", categoryId);
+        return ResponseEntity.ok(skillService.getSkillsByCategoryId(categoryId));
     }
 }

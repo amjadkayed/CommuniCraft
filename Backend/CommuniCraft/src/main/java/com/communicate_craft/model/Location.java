@@ -23,7 +23,7 @@ public class Location implements Serializable {
     @Id
     @GeneratedValue
     @Column(name = "LocationId")
-    private Integer locationId;
+    private Long id;
 
     @NotEmpty(message = "empty city name")
     @Column(name = "CityName")
@@ -44,5 +44,14 @@ public class Location implements Serializable {
         this.cityName = cityName;
         this.stateName = stateName;
         this.countryName = countryName;
+    }
+
+    @Override
+    public String toString() {
+        return "Location{" +
+                "cityName='" + cityName + '\'' +
+                ", stateName='" + stateName + '\'' +
+                ", countryName='" + countryName + '\'' +
+                '}';
     }
 }
