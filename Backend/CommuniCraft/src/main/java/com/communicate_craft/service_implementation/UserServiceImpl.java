@@ -8,7 +8,6 @@ import com.communicate_craft.model.Location;
 import com.communicate_craft.model.User;
 import com.communicate_craft.repository.UserRepository;
 import com.communicate_craft.service.UserService;
-import com.communicate_craft.utility.Converter;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -53,7 +52,7 @@ public class UserServiceImpl implements UserService {
         Optional<Location> location = locationServiceImpl.findById(request.getLocationId());
         if (location.isEmpty())
             throw new EntityNotFoundException("Location not found with id: " + request.getLocationId());
-        User user = Converter.convertUserDtoToUser(request, location.get());
+        User user = new User(request, location.get());
         user.setPassword(passwordEncoder.encode(user.getPassword()));
         checkDuplicatedUserFields(user);
         var jwtToken = jwtService.generateToken(userRepository.save(user));

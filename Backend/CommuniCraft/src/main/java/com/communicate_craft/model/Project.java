@@ -3,6 +3,7 @@ package com.communicate_craft.model;
 import com.communicate_craft.dto.ProjectDTO;
 import com.communicate_craft.enums.Status;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
@@ -70,6 +71,10 @@ public class Project {
         setTitle(projectDTO.getTitle());
         setRequiredSkills(projectDTO.getRequiredSkills().stream()
                 .map(dto -> new ProjectSkills(dto, this))
-                .collect(Collectors.toList()));
+                .toList());
+    }
+    @JsonProperty
+    public String getOwner() {
+        return owner.getUsername();
     }
 }

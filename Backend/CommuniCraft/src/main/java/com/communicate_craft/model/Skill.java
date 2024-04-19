@@ -1,5 +1,6 @@
 package com.communicate_craft.model;
 
+import com.communicate_craft.dto.SkillDTO;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotEmpty;
 import lombok.AllArgsConstructor;
@@ -27,9 +28,13 @@ public class Skill {
     @JoinColumn(name = "skill_category_category_id", nullable = false)
     private SkillCategory skillCategory;
 
-
     public Skill(String skillName) {
         this.skillName = skillName;
     }
 
+    public Skill(SkillDTO skillDTO, SkillCategory category){
+        setSkillId(skillDTO.getSkillId());
+        setSkillCategory(category);
+        setSkillName(skillDTO.getSkillName());
+    }
 }

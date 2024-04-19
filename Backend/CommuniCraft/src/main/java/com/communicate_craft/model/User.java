@@ -1,5 +1,6 @@
 package com.communicate_craft.model;
 
+import com.communicate_craft.dto.RegisterRequest;
 import com.communicate_craft.enums.Role;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
@@ -95,6 +96,18 @@ public class User implements UserDetails {
         numberOfReviews = 0;
         signUpDate = LocalDateTime.now();
         lastOnlineTime = LocalDateTime.now();
+    }
+
+    public User(RegisterRequest registrationDTO, Location location) {
+        this();
+        setUsername(registrationDTO.getUsername());
+        setFirstName(registrationDTO.getFirstName());
+        setLastName(registrationDTO.getLastName());
+        setEmail(registrationDTO.getEmail());
+        setPassword(registrationDTO.getPassword());
+        setPhoneNumber(registrationDTO.getPhoneNumber());
+        setLocation(location);
+        setRole(registrationDTO.getRole());
     }
 
     @Override
