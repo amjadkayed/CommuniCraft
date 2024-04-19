@@ -2,9 +2,7 @@ package com.communicate_craft.controller.admin_controller;
 
 import com.communicate_craft.model.SkillCategory;
 import com.communicate_craft.service.SkillCategoryService;
-import com.communicate_craft.utility.ErrorsResponse;
 import com.communicate_craft.utility.Validator;
-import jakarta.persistence.EntityNotFoundException;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

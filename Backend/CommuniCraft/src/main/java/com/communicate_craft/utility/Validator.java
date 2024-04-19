@@ -10,6 +10,10 @@ import java.util.Map;
 
 @Slf4j
 public class Validator {
+    private Validator() {
+        throw new IllegalStateException("can't create an object of validator class");
+    }
+
     public static Map<String, String> convertBindingResultToMap(BindingResult result) {
         Map<String, String> errors = new HashMap<>();
         for (FieldError error : result.getFieldErrors()) {

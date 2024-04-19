@@ -24,7 +24,7 @@ public class RegistrationServiceImpl {
         this.registrationStrategies.put(Role.CLIENT, userService);
     }
 
-    public AuthenticationResponse register(RegisterRequest request) {
+    public AuthenticationResponse register(RegisterRequest request){
         Role role = request.getRole();
         if (!registrationStrategies.containsKey(role)) {
             throw new IllegalArgumentException("Unsupported role: " + role);

@@ -4,7 +4,6 @@ import com.communicate_craft.dto.AuthenticationRequest;
 import com.communicate_craft.dto.AuthenticationResponse;
 import com.communicate_craft.dto.RegisterRequest;
 import com.communicate_craft.service.AuthenticationService;
-import com.communicate_craft.service_implementation.RegistrationServiceImpl;
 import com.communicate_craft.utility.Validator;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -26,7 +25,7 @@ public class AuthenticationController {
     private final AuthenticationService authenticationService;
 
     @PostMapping("/register")
-    public ResponseEntity<Object> register(@Valid @RequestBody RegisterRequest request, BindingResult result) {
+    public ResponseEntity<Object> register(@Valid @RequestBody RegisterRequest request, BindingResult result) throws Exception {
         log.info("AuthenticationController -->registering a user with username: " + request.getUsername());
         Validator.validateBody(result);
         AuthenticationResponse response = authenticationService.register(request);

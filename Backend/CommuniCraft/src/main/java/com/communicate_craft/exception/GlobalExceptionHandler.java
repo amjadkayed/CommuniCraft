@@ -16,6 +16,7 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
     public ResponseEntity<Object> handleValidationException(ValidationException ex) {
         return ResponseEntity.badRequest().body(ex.getErrors());
     }
+
     @ExceptionHandler(EntityNotFoundException.class)
     @ResponseBody
     public ResponseEntity<Object> handleNotFoundException(EntityNotFoundException ex, WebRequest request) {

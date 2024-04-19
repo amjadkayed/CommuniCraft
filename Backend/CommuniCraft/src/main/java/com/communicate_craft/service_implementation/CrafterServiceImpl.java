@@ -37,18 +37,15 @@ public class CrafterServiceImpl implements CrafterService {
     @Override
     public Crafter addCrafter(Crafter crafter) {
         checkUserExists(crafter.getUser());
-        System.out.println("Valid crafter");
         return crafterRepository.save(crafter);
     }
 
     @Override
     public AuthenticationResponse register(RegisterRequest request, Role... roles) {
         AuthenticationResponse response = userService.register(request, Role.CRAFTER);
-        if(response != null) {
-            User user = (User) response.user();
-            log.info("CrafterServiceImpl --> register --> user: " + user.getUsername() + " is a crafter");
-            addCrafter(Converter.convertUserToCrafter(user));
-        }
-        return response;
+        User user = (User) response.user();
+        log.info("CrafterServiceImpl --> register --> user: " + user.getUsername() + " is a crafter");
+        return new AuthenticationResponse(response.token(), addCrafter(Converter.convertUserToCrafter(user)));
+
     }
 }
