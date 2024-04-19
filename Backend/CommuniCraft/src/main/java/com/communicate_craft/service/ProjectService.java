@@ -11,4 +11,10 @@ public interface ProjectService {
     Project getProjectById(Long projectId);
 
     Project addProject(ProjectDTO projectDTO, Long ownerId);
+
+    Project updateProject(ProjectDTO projectDTO, Long ownerId);
+
+    void deleteProject(Long projectId, Long ownerId);
+    List<Project> getShowcase(Long categoryId);
+    List<Project> getLibrary(Long categoryId);
 }
