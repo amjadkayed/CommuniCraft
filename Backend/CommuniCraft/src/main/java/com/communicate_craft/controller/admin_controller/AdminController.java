@@ -37,7 +37,6 @@ public class AdminController {
     public ResponseEntity<Object> registerAdmin(@Valid @RequestBody RegisterRequest request, BindingResult result) {
         log.info("AdminUserController --> registering: {}", request.getUsername());
         Validator.validateBody(result);
-        request.setRole(Role.ADMIN);
         AuthenticationResponse response = adminService.register(request);
         log.info("AdminController --> registered: {} successfully", request.getUsername());
         return ResponseEntity.status(HttpStatus.CREATED)

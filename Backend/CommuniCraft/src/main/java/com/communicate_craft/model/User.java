@@ -149,4 +149,26 @@ public class User implements UserDetails {
     public void setEmail(String email) {
         this.email = email;
     }
+
+    @Override
+    public String toString() {
+        return "User{" +
+                "userID=" + userID +
+                ", username='" + username + '\'' +
+                ", firstName='" + firstName + '\'' +
+                ", lastName='" + lastName + '\'' +
+                ", email='" + email + '\'' +
+                ", password='" + password + '\'' +
+                ", phoneNumber='" + phoneNumber + '\'' +
+                ", role=" + role +
+                ", userImageURL='" + userImageURL + '\'' +
+                ", signUpDate=" + signUpDate +
+                ", lastOnlineTime=" + lastOnlineTime +
+                ", rating=" + rating +
+                ", numberOfReviews=" + numberOfReviews +
+                ", totalSalary=" + totalSalary +
+                ", location=" + location +
+                ", crafter=" + crafter +
+                '}';
+    }
 }
