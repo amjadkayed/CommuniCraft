@@ -15,7 +15,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
 import java.util.Optional;
 
 @Slf4j
@@ -62,19 +61,6 @@ public class UserServiceImpl implements UserService {
         return new AuthenticationResponse(jwtToken, user);
     }
 
-    public User register(User user) throws DuplicateEntryException {
-        if (userRepository.findByEmail(user.getEmail()).isPresent()) {
-            throw new DuplicateEntryException("Email already exists: " + user.getEmail());
-        }
-        if (userRepository.findByUsername(user.getUsername()).isPresent()) {
-            throw new DuplicateEntryException("Username already exists: " + user.getUsername());
-        }
-        if (userRepository.findByPhoneNumber(user.getPhoneNumber()).isPresent()) {
-            throw new DuplicateEntryException("Phone number already exists: " + user.getPhoneNumber());
-        }
-        return userRepository.save(user);
-    }
-
     public User updateUser(User user) {
         Optional<User> testUser = userRepository.findByEmail(user.getEmail());
         if (testUser.isPresent() && !testUser.get().getUserID().equals(user.getUserID())) {
@@ -95,12 +81,20 @@ public class UserServiceImpl implements UserService {
         userRepository.deleteById(userId);
     }
 
+    @Override
     public Optional<User> findByUserId(Long userId) {
         return userRepository.findById(userId);
     }
 
-    public List<User> findAllUsers() {
-        return userRepository.findAll();
+    @Override
+    public Optional<User> findByUserEmail(String userEmail) {
+        return userRepository.findByEmail(userEmail);
+    }
+
+    @Override
+    public void checkUserExists(User user) {
+        if (user == null || findByUserId(user.getUserID()).isEmpty())
+            throw new EntityNotFoundException("User is not found");
     }
 
 }
