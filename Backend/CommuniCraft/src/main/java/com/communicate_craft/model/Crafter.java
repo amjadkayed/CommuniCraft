@@ -7,6 +7,8 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.io.Serializable;
+import java.util.LinkedHashSet;
+import java.util.Set;
 
 @Getter
 @Setter
@@ -33,4 +35,9 @@ public class Crafter implements Serializable {
     @JoinColumn(name = "user_user_id", nullable = false)
     private User user;
 
+    @ManyToMany
+    @JoinTable(name = "Crafter_skills",
+            joinColumns = @JoinColumn(name = "crafter_user_user_id"),
+            inverseJoinColumns = @JoinColumn(name = "skills_SkillId"))
+    private transient Set<Skill> skills = new LinkedHashSet<>();
 }

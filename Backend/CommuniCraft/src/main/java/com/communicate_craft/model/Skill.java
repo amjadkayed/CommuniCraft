@@ -1,6 +1,5 @@
 package com.communicate_craft.model;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotEmpty;
 import lombok.AllArgsConstructor;
@@ -26,7 +25,6 @@ public class Skill {
 
     @ManyToOne(cascade = CascadeType.ALL, optional = false)
     @JoinColumn(name = "skill_category_category_id", nullable = false)
-    @JsonIgnore
     private SkillCategory skillCategory;
 
 

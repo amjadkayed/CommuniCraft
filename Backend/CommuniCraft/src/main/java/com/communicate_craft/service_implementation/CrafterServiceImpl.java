@@ -4,6 +4,7 @@ import com.communicate_craft.dto.AuthenticationResponse;
 import com.communicate_craft.dto.RegisterRequest;
 import com.communicate_craft.enums.Role;
 import com.communicate_craft.model.Crafter;
+import com.communicate_craft.model.Skill;
 import com.communicate_craft.model.User;
 import com.communicate_craft.repository.CrafterRepository;
 import com.communicate_craft.service.CrafterService;
@@ -14,20 +15,17 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
+import java.util.LinkedHashSet;
 import java.util.List;
+import java.util.Optional;
+import java.util.Set;
 
 @Slf4j
 @Service
 @RequiredArgsConstructor
 public class CrafterServiceImpl implements CrafterService {
     private final CrafterRepository crafterRepository;
-    private final UserServiceImpl userServiceImpl;
     private final UserService userService;
-
-    private void checkUserExists(User user) {
-        if (user == null || userServiceImpl.findByUserId(user.getUserID()).isEmpty())
-            throw new EntityNotFoundException("User is not found");
-    }
 
     @Override
     public List<Crafter> getAllCrafters() {
@@ -36,8 +34,27 @@ public class CrafterServiceImpl implements CrafterService {
 
     @Override
     public Crafter addCrafter(Crafter crafter) {
-        checkUserExists(crafter.getUser());
+        userService.checkUserExists(crafter.getUser());
         return crafterRepository.save(crafter);
+    }
+
+    @Override
+    public Crafter getCrafterByEmail(String crafterEmail) {
+        Optional<User> user = userService.findByUserEmail(crafterEmail);
+        if (user.isEmpty())
+            throw new EntityNotFoundException("User with email " + crafterEmail + " is not found");
+        Optional<Crafter> crafter = crafterRepository.findById(user.get().getUserID());
+        if (crafter.isEmpty())
+            throw new EntityNotFoundException("Crafter with id " + user.get().getUserID() + " is not found");
+        return crafter.get();
+    }
+
+    @Override
+    public Crafter updateCrafterSkills(String crafterEmail, Set<Skill> newSkills) {
+        Crafter crafter = getCrafterByEmail(crafterEmail);
+        crafter.setSkills(newSkills);
+        crafterRepository.save(crafter);
+        return crafter;
     }
 
     @Override

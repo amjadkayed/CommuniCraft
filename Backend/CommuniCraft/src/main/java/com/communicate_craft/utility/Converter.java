@@ -52,7 +52,7 @@ public class Converter {
     public static Crafter convertUserToCrafter(User user) {
         if (user == null)
             throw new IllegalArgumentException("User is required");
-        return new Crafter(user.getUserID().longValue(), "", true, null, user);
+        return new Crafter(user.getUserID(), "", true, null, user, null );
     }
 
     public static User convertUserUpdateDtoToUser(RegisterRequest newUser, User oldUser, Location location) {
