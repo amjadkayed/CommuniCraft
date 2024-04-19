@@ -16,7 +16,9 @@ import org.springframework.security.core.userdetails.UserDetails;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.Collection;
+import java.util.LinkedHashSet;
 import java.util.List;
+import java.util.Set;
 
 @Getter
 @Setter
@@ -90,6 +92,10 @@ public class User implements UserDetails {
     @OneToOne(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
     @JsonIgnore
     private transient Crafter crafter;
+
+    @ManyToMany(mappedBy = "chatParticipants")
+    @JsonIgnore
+    private Set<Chat> chats = new LinkedHashSet<>();
 
     public User() {
         totalSalary = BigDecimal.valueOf(0);

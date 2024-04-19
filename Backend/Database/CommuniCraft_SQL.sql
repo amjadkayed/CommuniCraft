@@ -59,8 +59,9 @@ CREATE TABLE CraftersSkills (
     FOREIGN KEY (SkillId) REFERENCES Skills(SkillId) ON DELETE CASCADE ON UPDATE CASCADE
 );
 
+-- done
 CREATE TABLE Chats (
-    ChatID INT AUTO_INCREMENT PRIMARY KEY,
+    ChatId INT AUTO_INCREMENT PRIMARY KEY,
     ChatType ENUM('private', 'proposal', 'team') NOT NULL,
     CreatedAt DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP
 );
@@ -93,23 +94,25 @@ CREATE TABLE ProjectSkills (
     FOREIGN KEY (SkillId) REFERENCES Skills(SkillId) ON DELETE CASCADE ON UPDATE CASCADE
 );
 
+-- done
 CREATE TABLE ChatParticipants (
     ChatID INT,
     UserID INT,
-    JoinedAt DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
     PRIMARY KEY (ChatID, UserID),
     FOREIGN KEY (ChatID) REFERENCES Chats(ChatID) ON DELETE CASCADE,
     FOREIGN KEY (UserID) REFERENCES Users(UserID) ON DELETE CASCADE
 );
 
+-- done
 CREATE TABLE Messages (
-    MessageID INT AUTO_INCREMENT PRIMARY KEY,
-    ChatID INT,
+    MessageId INT AUTO_INCREMENT PRIMARY KEY,
+    ChatId INT,
     SenderID INT,
-    MessageType ENUM('text', 'image', 'vedio', 'audio') NOT NULL,
+    MessageType ENUM('text', 'image', 'video', 'audio') NOT NULL,
     MessageText TEXT NOT NULL,
     SentAt DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    FOREIGN KEY (ChatID) REFERENCES Chats(ChatID) ON DELETE CASCADE,
+    Contect varchar(1024) NOT NULL,
+    FOREIGN KEY (ChatId) REFERENCES Chats(ChatId) ON DELETE CASCADE,
     FOREIGN KEY (SenderID) REFERENCES Users(UserID) ON DELETE CASCADE
 );
 
