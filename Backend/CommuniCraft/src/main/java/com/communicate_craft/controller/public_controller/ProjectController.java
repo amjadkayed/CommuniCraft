@@ -1,7 +1,6 @@
 package com.communicate_craft.controller.public_controller;
 
 import com.communicate_craft.dto.ProjectDTO;
-import com.communicate_craft.enums.Status;
 import com.communicate_craft.model.Project;
 import com.communicate_craft.model.User;
 import com.communicate_craft.service.ProjectService;
@@ -35,8 +34,9 @@ public class ProjectController {
     }
 
     @GetMapping("/showcase")
-    public ResponseEntity<Object> showcaseAndSharing(@RequestParam(value = "categoryId", required = false) Long categoryId) {
-        List<Project> projects = projectService.getShowcase(categoryId);
+    public ResponseEntity<Object> showcaseAndSharing(@RequestParam(value = "categoryId", required = false) Long categoryId,
+                                                     @RequestParam(required = false) String title) {
+        List<Project> projects = projectService.getShowcase(title, categoryId);
         return ResponseEntity.ok(projects);
     }
 

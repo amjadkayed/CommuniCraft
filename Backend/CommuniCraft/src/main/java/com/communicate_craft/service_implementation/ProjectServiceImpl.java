@@ -9,7 +9,6 @@ import com.communicate_craft.repository.ProjectRepository;
 import com.communicate_craft.service.LocationService;
 import com.communicate_craft.service.ProjectService;
 import com.communicate_craft.service.UserService;
-import com.communicate_craft.utility.ProjectFilterUtils;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -19,6 +18,7 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
+import java.util.stream.Stream;
 
 @Slf4j
 @Service
@@ -51,14 +51,21 @@ public class ProjectServiceImpl implements ProjectService {
         return project;
     }
 
-    private List<Project> getProjectsByStatus(Status status) {
-        return projectRepository.findByStatus(status);
-    }
+    private List<Project> searchProjects(String title, Status status, Long categoryId) {
+        List<Project> allProjects = projectRepository.findAll();
+        Stream<Project> filteredProjects = allProjects.stream();
+        if (status != null) {
+            filteredProjects = filteredProjects.filter(p -> p.getStatus().equals(status));
+        }
 
-    private List<Project> filterBySkillCategory(List<Project> projects, Long categoryId) {
-        if (categoryId == null)
-            return projects;
-        return ProjectFilterUtils.filterProjectsBySkillCategory(projects, categoryId);
+        if (title != null && !title.isEmpty()) {
+            filteredProjects = filteredProjects.filter(p -> p.getTitle().toLowerCase().contains(title.toLowerCase()));
+        }
+
+        if (categoryId != null)
+            filteredProjects = filteredProjects.filter(project -> project.getRequiredSkills().stream()
+                    .anyMatch(ps -> ps.getSkill().getSkillCategory().getCategoryId().equals(categoryId)));
+        return filteredProjects.toList();
     }
 
     @Override
@@ -96,16 +103,12 @@ public class ProjectServiceImpl implements ProjectService {
     }
 
     @Override
-    public List<Project> getShowcase(Long categoryId) {
-        List<Project> projects = getProjectsByStatus(Status.COMPLETED);
-        projects = filterBySkillCategory(projects, categoryId);
-        return projects;
+    public List<Project> getShowcase(String title, Long categoryId) {
+        return searchProjects(title, Status.COMPLETED, categoryId);
     }
 
     @Override
     public List<Project> getLibrary(Long categoryId) {
-        List<Project> projects = getProjectsByStatus(Status.NOT_STARTED);
-        projects = filterBySkillCategory(projects, categoryId);
-        return projects;
+        return searchProjects(null, Status.NOT_STARTED, categoryId);
     }
 }

@@ -15,6 +15,6 @@ public interface ProjectService {
     Project updateProject(ProjectDTO projectDTO, Long ownerId);
 
     void deleteProject(Long projectId, Long ownerId);
-    List<Project> getShowcase(Long categoryId);
+    List<Project> getShowcase(String title, Long categoryId);
     List<Project> getLibrary(Long categoryId);
 }
